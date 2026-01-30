@@ -92,6 +92,24 @@ ensure_compose_file() {
   fi
 }
 
+resolve_volume_name() {
+  ensure_compose_file
+  local cid vol
+  vol=""
+  if docker compose version >/dev/null 2>&1; then
+    cid="$(docker compose -f "$COMPOSE_FILE" ps -aq qatrack-postgres 2>/dev/null || true)"
+  else
+    cid="$(docker-compose -f "$COMPOSE_FILE" ps -q qatrack-postgres 2>/dev/null || true)"
+  fi
+  if [[ -n "${cid:-}" ]]; then
+    vol="$(docker inspect -f '{{range .Mounts}}{{if and (eq .Destination "/var/lib/postgresql/data") (eq .Type "volume")}}{{.Name}}{{end}}{{end}}' "$cid" 2>/dev/null || true)"
+  fi
+  if [[ -z "${vol:-}" ]]; then
+    vol="$VOLUME_NAME"
+  fi
+  echo "$vol"
+}
+
 start_containers() {
   ensure_compose_file
   echo "HAY QUE ESPERAR AL MENOS 10 - 15 SEGUNDOS QUE EL CONTENDOR DE NGINX CARGUE CORRECTAMENTE. UNA VEZ CARGADO LOS CONTENEDORES, ESPERAR 15 SEGUNDOS A QUE NGINX CARGUE POR COMPLETO."
@@ -115,38 +133,48 @@ stop_containers() {
 
 backup_volume() {
   mkdir -p "$BACKUP_DIR"
-  local ts archive
+  local ts archive volume_name
   ts="$(date +%Y%m%d_%H%M%S)"
-  archive="$BACKUP_DIR/${VOLUME_NAME}_${ts}.tar.gz"
-  if docker volume inspect "$VOLUME_NAME" >/dev/null 2>&1; then
+  volume_name="$(resolve_volume_name)"
+  archive="$BACKUP_DIR/${volume_name}_${ts}.tar.gz"
+  if ! docker volume inspect "$volume_name" >/dev/null 2>&1; then
+    if docker compose version >/dev/null 2>&1; then
+      docker compose -f "$COMPOSE_FILE" up -d qatrack-postgres >/dev/null 2>&1 || true
+    else
+      docker-compose -f "$COMPOSE_FILE" up -d qatrack-postgres >/dev/null 2>&1 || true
+    fi
+    volume_name="$(resolve_volume_name)"
+  fi
+  if docker volume inspect "$volume_name" >/dev/null 2>&1; then
     docker run --rm \
-      -v "$VOLUME_NAME":/data:ro \
+      -v "$volume_name":/data:ro \
       -v "$BACKUP_DIR":/backup \
       alpine:3.19 \
       sh -c "cd /data && tar -czf /backup/$(basename "$archive") ."
     echo "Backup creado: $archive"
   else
-    echo "No existe el volumen: $VOLUME_NAME" >&2
+    echo "No existe el volumen: $volume_name" >&2
     exit 1
   fi
 }
 
 restore_volume() {
-  local archive
+  local archive volume_name
   read -r -p "Ruta del archivo .tar.gz: " archive
   if [[ -z "$archive" || ! -f "$archive" ]]; then
     echo "No se encontro el archivo: $archive" >&2
     exit 1
   fi
-  if ! docker volume inspect "$VOLUME_NAME" >/dev/null 2>&1; then
-    docker volume create "$VOLUME_NAME" >/dev/null
+  volume_name="$(resolve_volume_name)"
+  if ! docker volume inspect "$volume_name" >/dev/null 2>&1; then
+    docker volume create "$volume_name" >/dev/null
   fi
   docker run --rm \
-    -v "$VOLUME_NAME":/data \
+    -v "$volume_name":/data \
     -v "$(cd "$(dirname "$archive")" && pwd)":/backup \
     alpine:3.19 \
     sh -c "cd /data && rm -rf ./* && tar -xzf /backup/$(basename "$archive")"
-  echo "Backup restaurado en volumen: $VOLUME_NAME"
+  echo "Backup restaurado en volumen: $volume_name"
 
   read -r -p "Desea arrancar contenedores ahora? [s/N]: " start_now
   if [[ "$start_now" == "s" || "$start_now" == "S" ]]; then

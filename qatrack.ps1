@@ -55,6 +55,17 @@ function Ensure-ComposeFile {
   }
 }
 
+function Resolve-VolumeName {
+  Ensure-ComposeFile
+  $cid = & docker compose -f $ComposeFile ps -aq qatrack-postgres 2>$null
+  $vol = ''
+  if ($cid) {
+    $vol = & docker inspect -f "{{range .Mounts}}{{if and (eq .Destination \"/var/lib/postgresql/data\") (eq .Type \"volume\")}}{{.Name}}{{end}}{{end}}" $cid 2>$null
+  }
+  if (-not $vol) { $vol = $VolumeName }
+  return $vol
+}
+
 function Start-Containers {
   Ensure-ComposeFile
   Write-Host 'HAY QUE ESPERAR AL MENOS 10 - 15 SEGUNDOS QUE EL CONTENDOR DE NGINX CARGUE CORRECTAMENTE!'
@@ -70,9 +81,18 @@ function Stop-Containers {
 function Backup-Volume {
   New-Item -ItemType Directory -Force -Path $BackupDir | Out-Null
   $ts = Get-Date -Format 'yyyyMMdd_HHmmss'
-  $archive = Join-Path $BackupDir ("{0}_{1}.tar.gz" -f $VolumeName, $ts)
-  & docker volume inspect $VolumeName | Out-Null
-  & docker run --rm -v "${VolumeName}:/data:ro" -v "${BackupDir}:/backup" alpine:3.19 sh -c "cd /data && tar -czf /backup/$(Split-Path -Leaf $archive) ."
+  $volumeName = Resolve-VolumeName
+  $archive = Join-Path $BackupDir ("{0}_{1}.tar.gz" -f $volumeName, $ts)
+  & docker volume inspect $volumeName | Out-Null
+  if ($LASTEXITCODE -ne 0) {
+    & docker compose -f $ComposeFile up -d qatrack-postgres | Out-Null
+    $volumeName = Resolve-VolumeName
+    & docker volume inspect $volumeName | Out-Null
+  }
+  if ($LASTEXITCODE -ne 0) {
+    Write-Error "No existe el volumen: $volumeName"
+  }
+  & docker run --rm -v "${volumeName}:/data:ro" -v "${BackupDir}:/backup" alpine:3.19 sh -c "cd /data && tar -czf /backup/$(Split-Path -Leaf $archive) ."
   Write-Host "Backup creado: $archive"
 }
 
@@ -81,14 +101,15 @@ function Restore-Volume {
   if (-not (Test-Path $archive)) {
     Write-Error "No se encontro el archivo: $archive"
   }
-  & docker volume inspect $VolumeName | Out-Null
+  $volumeName = Resolve-VolumeName
+  & docker volume inspect $volumeName | Out-Null
   if ($LASTEXITCODE -ne 0) {
-    & docker volume create $VolumeName | Out-Null
+    & docker volume create $volumeName | Out-Null
   }
   $archiveDir = Split-Path -Parent $archive
   $archiveName = Split-Path -Leaf $archive
-  & docker run --rm -v "${VolumeName}:/data" -v "${archiveDir}:/backup" alpine:3.19 sh -c "cd /data && rm -rf ./* && tar -xzf /backup/$archiveName"
-  Write-Host "Backup restaurado en volumen: $VolumeName"
+  & docker run --rm -v "${volumeName}:/data" -v "${archiveDir}:/backup" alpine:3.19 sh -c "cd /data && rm -rf ./* && tar -xzf /backup/$archiveName"
+  Write-Host "Backup restaurado en volumen: $volumeName"
   $startNow = Read-Host 'Desea arrancar contenedores ahora? [s/N]'
   if ($startNow -eq 's' -or $startNow -eq 'S') {
     Start-Containers
