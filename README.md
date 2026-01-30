@@ -55,6 +55,7 @@ Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
    - Descarga (clona) el repositorio completo en la ruta indicada.
    - Usa automaticamente: `https://github.com/D1abloo/qatrack.git`.
    - Si la carpeta ya tiene un repo, el script se detiene y pide otra ruta.
+   - Si la ruta existe y no esta vacia, crea `qatrackplus` dentro de esa ruta.
 6. **Instalacion de Docker (segun SO)**
    - Muestra pasos basicos de instalacion para Windows, macOS o Linux.
 
