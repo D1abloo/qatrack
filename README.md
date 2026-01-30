@@ -60,6 +60,9 @@ Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
    - Si la ruta existe y no esta vacia, crea `qatrackplus` dentro de esa ruta.
 6. **Instalacion de Docker (segun SO)**
    - Muestra pasos basicos de instalacion para Windows, macOS o Linux.
+7. **Eliminar backups**
+   - Lista y elimina backups `.tar.gz` en la carpeta `backups/`.
+   - Muestra fecha/hora y tamaño de cada backup.
 
 ## Enlaces oficiales (Docker)
 - Windows (Docker Desktop): https://www.docker.com/products/docker-desktop/
