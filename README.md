@@ -67,6 +67,8 @@ Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
 8. **Configurar ruta de backups**
    - Define la carpeta donde se guardan/restauran los backups.
    - El valor queda guardado en `.qatrack_backup_dir`.
+9. **Apagar equipo**
+   - Apaga el sistema (pide confirmacion).
 
 ## Enlaces oficiales (Docker)
 - Windows (Docker Desktop): https://www.docker.com/products/docker-desktop/

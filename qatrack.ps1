@@ -272,6 +272,15 @@ function Pause-Menu {
   $null = Read-Host 'Presiona Enter para volver al menu (Ctrl+C para salir)'
 }
 
+function Shutdown-System {
+  $confirm = Read-Host 'Seguro que deseas apagar el equipo? [s/N]'
+  if ($confirm -eq 's' -or $confirm -eq 'S') {
+    shutdown /s /t 0
+  } else {
+    Write-Host 'Operacion cancelada.'
+  }
+}
+
 while ($true) {
   Write-Host 'Seleccione una opcion:'
   Write-Host '1) Ejecutar (actualizar IP y arrancar contenedores)'
@@ -282,7 +291,8 @@ while ($true) {
   Write-Host '6) Instalacion de Docker (segun SO)'
   Write-Host '7) Eliminar backups'
   Write-Host '8) Configurar ruta de backups'
-  Write-Host '9) Salir'
+  Write-Host '9) Apagar equipo'
+  Write-Host '10) Salir'
   $choice = Read-Host 'Opcion'
 
   switch ($choice) {
@@ -299,7 +309,8 @@ while ($true) {
     '6' { Show-InstallNotes; Pause-Menu }
     '7' { Delete-Backups; Pause-Menu }
     '8' { Set-BackupDir; Pause-Menu }
-    '9' { break }
+    '9' { Shutdown-System; Pause-Menu }
+    '10' { break }
     Default { Write-Error 'Opcion invalida.'; Pause-Menu }
   }
 }

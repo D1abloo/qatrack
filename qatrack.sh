@@ -390,6 +390,15 @@ pause_menu() {
   echo
 }
 
+shutdown_system() {
+  read -r -p "Seguro que deseas apagar el equipo? [s/N]: " confirm
+  if [[ "$confirm" == "s" || "$confirm" == "S" ]]; then
+    sudo shutdown -h now
+  else
+    echo "Operacion cancelada."
+  fi
+}
+
 echo "Seleccione una opcion:"
 while true; do
   echo "1) Ejecutar (actualizar IP y arrancar contenedores)"
@@ -400,7 +409,8 @@ while true; do
   echo "6) Instalacion de Docker (segun SO)"
   echo "7) Eliminar backups"
   echo "8) Configurar ruta de backups"
-  echo "9) Salir"
+  echo "9) Apagar equipo"
+  echo "10) Salir"
   read -r -p "Opcion: " choice
 
   case "$choice" in
@@ -439,6 +449,10 @@ while true; do
       pause_menu
       ;;
     9)
+      shutdown_system
+      pause_menu
+      ;;
+    10)
       break
       ;;
     *)
