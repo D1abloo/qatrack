@@ -293,6 +293,42 @@ show_install_notes() {
   fi
 }
 
+delete_backups() {
+  mkdir -p "$BACKUP_DIR"
+  echo "Backups disponibles en: $BACKUP_DIR"
+  if ls -1 "$BACKUP_DIR"/*.tar.gz >/dev/null 2>&1; then
+    while IFS= read -r f; do
+      base="$(basename "$f")"
+      ts="$(echo "$base" | sed -E 's/.*_([0-9]{8}_[0-9]{6})\\.tar\\.gz/\\1/')"
+      if [[ "$ts" =~ ^[0-9]{8}_[0-9]{6}$ ]]; then
+        date_fmt="${ts:0:4}-${ts:4:2}-${ts:6:2} ${ts:9:2}:${ts:11:2}:${ts:13:2}"
+        printf "%s  (%s)\\n" "$base" "$date_fmt"
+      else
+        printf "%s\\n" "$base"
+      fi
+    done < <(ls -1 "$BACKUP_DIR"/*.tar.gz 2>/dev/null)
+  else
+    echo "No hay backups .tar.gz"
+  fi
+  read -r -p "Nombre del backup a eliminar (o 'todo' para borrar todos): " target
+  if [[ -z "$target" ]]; then
+    echo "Operacion cancelada." >&2
+    exit 1
+  fi
+  if [[ "$target" == "todo" ]]; then
+    rm -f "$BACKUP_DIR"/*.tar.gz
+    echo "Backups eliminados."
+  else
+    if [[ -f "$BACKUP_DIR/$target" ]]; then
+      rm -f "$BACKUP_DIR/$target"
+      echo "Backup eliminado: $BACKUP_DIR/$target"
+    else
+      echo "No se encontro el backup: $BACKUP_DIR/$target" >&2
+      exit 1
+    fi
+  fi
+}
+
 echo "Seleccione una opcion:"
 echo "1) Ejecutar (actualizar IP y arrancar contenedores)"
 echo "2) Parar contenedores"
@@ -300,7 +336,8 @@ echo "3) Crear backup de volumen"
 echo "4) Restaurar backup de volumen"
 echo "5) Descargar/actualizar repo"
 echo "6) Instalacion de Docker (segun SO)"
-echo "7) Salir"
+echo "7) Eliminar backups"
+echo "8) Salir"
 read -r -p "Opcion: " choice
 
 case "$choice" in
@@ -325,6 +362,9 @@ case "$choice" in
     show_install_notes
     ;;
   7)
+    delete_backups
+    ;;
+  8)
     exit 0
     ;;
   *)

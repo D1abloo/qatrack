@@ -181,6 +181,41 @@ function Show-InstallNotes {
   Write-Host '- Linux: instala Docker Engine con el gestor de paquetes de tu distribucion.'
 }
 
+function Delete-Backups {
+  New-Item -ItemType Directory -Force -Path $BackupDir | Out-Null
+  Write-Host "Backups disponibles en: $BackupDir"
+  $files = Get-ChildItem -Path $BackupDir -Filter '*.tar.gz' -ErrorAction SilentlyContinue
+  if ($files) {
+    $files | ForEach-Object {
+      $name = $_.Name
+      $m = [regex]::Match($name, '_([0-9]{8}_[0-9]{6})\\.tar\\.gz$')
+      if ($m.Success) {
+        $ts = $m.Groups[1].Value
+        $date = "{0}-{1}-{2} {3}:{4}:{5}" -f $ts.Substring(0,4), $ts.Substring(4,2), $ts.Substring(6,2), $ts.Substring(9,2), $ts.Substring(11,2), $ts.Substring(13,2)
+        Write-Host "$name  ($date)"
+      } else {
+        Write-Host $name
+      }
+    }
+  } else {
+    Write-Host 'No hay backups .tar.gz'
+  }
+  $target = Read-Host "Nombre del backup a eliminar (o 'todo' para borrar todos)"
+  if (-not $target) { Write-Error 'Operacion cancelada.' }
+  if ($target -eq 'todo') {
+    Get-ChildItem -Path $BackupDir -Filter '*.tar.gz' -ErrorAction SilentlyContinue | Remove-Item -Force
+    Write-Host 'Backups eliminados.'
+  } else {
+    $path = Join-Path $BackupDir $target
+    if (Test-Path $path) {
+      Remove-Item -Force $path
+      Write-Host "Backup eliminado: $path"
+    } else {
+      Write-Error "No se encontro el backup: $path"
+    }
+  }
+}
+
 Write-Host 'Seleccione una opcion:'
 Write-Host '1) Ejecutar (actualizar IP y arrancar contenedores)'
 Write-Host '2) Parar contenedores'
@@ -188,7 +223,8 @@ Write-Host '3) Crear backup de volumen'
 Write-Host '4) Restaurar backup de volumen'
 Write-Host '5) Descargar/actualizar repo'
 Write-Host '6) Instalacion de Docker (segun SO)'
-Write-Host '7) Salir'
+Write-Host '7) Eliminar backups'
+Write-Host '8) Salir'
 $choice = Read-Host 'Opcion'
 
 switch ($choice) {
@@ -202,6 +238,7 @@ switch ($choice) {
   '4' { Restore-Volume }
   '5' { Download-Repo }
   '6' { Show-InstallNotes }
-  '7' { exit 0 }
+  '7' { Delete-Backups }
+  '8' { exit 0 }
   Default { Write-Error 'Opcion invalida.' }
 }
