@@ -155,12 +155,23 @@ restore_volume() {
 }
 
 download_repo() {
-  local repo_url dest_dir
+  local repo_url dest_dir os default_dir
+  os="$(uname -s 2>/dev/null || true)"
   read -r -p "URL del repositorio [${REPO_URL_DEFAULT}]: " repo_url
   if [[ -z "$repo_url" ]]; then
     repo_url="$REPO_URL_DEFAULT"
   fi
-  read -r -p "Ruta destino para descargar el repo: " dest_dir
+  if [[ "$os" == "Darwin" ]]; then
+    default_dir="$HOME/Documents/qatrackplus"
+  elif [[ "$os" =~ MINGW|MSYS|CYGWIN ]]; then
+    default_dir="$HOME/qatrackplus"
+  else
+    default_dir="$HOME/qatrackplus"
+  fi
+  read -r -p "Ruta destino para descargar el repo [${default_dir}]: " dest_dir
+  if [[ -z "$dest_dir" ]]; then
+    dest_dir="$default_dir"
+  fi
   if [[ -z "$dest_dir" ]]; then
     echo "Ruta destino requerida." >&2
     exit 1
@@ -179,6 +190,11 @@ download_repo() {
       echo "git no esta instalado." >&2
       exit 1
     fi
+  fi
+
+  echo "Ruta detectada de local_settings.py: $dest_dir/qatrack/local_settings.py"
+  if [[ ! -f "$dest_dir/qatrack/local_settings.py" ]]; then
+    echo "Aviso: no se encontro local_settings.py en la ruta esperada." >&2
   fi
 }
 

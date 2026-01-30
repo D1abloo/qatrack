@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+
+# Backups
+backups/
+*.tar.gz
+*.zip
+
+# Docker user data / caches (generated)
+deploy/docker/user-data/
+
+# Pip cache
+pip-cache/
+

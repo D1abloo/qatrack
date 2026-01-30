@@ -15,6 +15,12 @@ Desde la raiz del proyecto:
 ./qatrack.sh
 ```
 
+En Windows (PowerShell):
+
+```powershell
+.\qatrack.ps1
+```
+
 ## Que hace cada opcion
 1. **Ejecutar (actualizar IP y arrancar contenedores)**
    - Detecta el sistema operativo y obtiene la IP actual.
