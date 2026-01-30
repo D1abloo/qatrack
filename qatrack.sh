@@ -198,13 +198,30 @@ download_repo() {
   fi
 }
 
+show_install_notes() {
+  local os
+  os="$(uname -s 2>/dev/null || true)"
+  echo "Instalacion de Docker:"
+  if [[ "$os" == "Darwin" ]]; then
+    echo "- macOS: instala Docker Desktop desde el sitio oficial de Docker."
+    echo "- macOS: abre Docker Desktop y espera a que el icono indique que esta listo."
+  elif [[ "$os" =~ MINGW|MSYS|CYGWIN ]]; then
+    echo "- Windows: instala Docker Desktop desde el sitio oficial de Docker."
+    echo "- Windows: habilita WSL 2 y reinicia si lo solicita."
+  else
+    echo "- Linux: instala Docker Engine con el gestor de paquetes de tu distribucion."
+    echo "- Linux: agrega tu usuario al grupo docker y cierra sesion."
+  fi
+}
+
 echo "Seleccione una opcion:"
 echo "1) Ejecutar (actualizar IP y arrancar contenedores)"
 echo "2) Parar contenedores"
 echo "3) Crear backup de volumen"
 echo "4) Restaurar backup de volumen"
 echo "5) Descargar/actualizar repo"
-echo "6) Salir"
+echo "6) Instalacion de Docker (segun SO)"
+echo "7) Salir"
 read -r -p "Opcion: " choice
 
 case "$choice" in
@@ -226,6 +243,9 @@ case "$choice" in
     download_repo
     ;;
   6)
+    show_install_notes
+    ;;
+  7)
     exit 0
     ;;
   *)

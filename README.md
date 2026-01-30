@@ -21,6 +21,18 @@ En Windows (PowerShell):
 .\qatrack.ps1
 ```
 
+Si PowerShell bloquea la ejecucion de scripts, puedes permitirlos para la sesion actual:
+
+```powershell
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+```
+
+O permitir scripts locales de forma permanente (recomendado para entornos controlados):
+
+```powershell
+Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
+```
+
 ## Que hace cada opcion
 1. **Ejecutar (actualizar IP y arrancar contenedores)**
    - Detecta el sistema operativo y obtiene la IP actual.
@@ -42,6 +54,8 @@ En Windows (PowerShell):
 5. **Descargar/actualizar repo**
    - Permite clonar o actualizar el repositorio completo en otra carpeta.
    - Por defecto usa: `https://github.com/D1abloo/qatrack.git`.
+6. **Instalacion de Docker (segun SO)**
+   - Muestra pasos basicos de instalacion para Windows, macOS o Linux.
 
 ## Variables opcionales
 Puedes sobrescribir rutas si lo necesitas:

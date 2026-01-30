@@ -115,13 +115,22 @@ function Download-Repo {
   }
 }
 
+function Show-InstallNotes {
+  Write-Host 'Instalacion de Docker:'
+  Write-Host '- Windows: instala Docker Desktop desde el sitio oficial de Docker.'
+  Write-Host '- Windows: habilita WSL 2 y reinicia si lo solicita.'
+  Write-Host '- macOS: instala Docker Desktop desde el sitio oficial de Docker.'
+  Write-Host '- Linux: instala Docker Engine con el gestor de paquetes de tu distribucion.'
+}
+
 Write-Host 'Seleccione una opcion:'
 Write-Host '1) Ejecutar (actualizar IP y arrancar contenedores)'
 Write-Host '2) Parar contenedores'
 Write-Host '3) Crear backup de volumen'
 Write-Host '4) Restaurar backup de volumen'
 Write-Host '5) Descargar/actualizar repo'
-Write-Host '6) Salir'
+Write-Host '6) Instalacion de Docker (segun SO)'
+Write-Host '7) Salir'
 $choice = Read-Host 'Opcion'
 
 switch ($choice) {
@@ -134,6 +143,7 @@ switch ($choice) {
   '3' { Backup-Volume }
   '4' { Restore-Volume }
   '5' { Download-Repo }
-  '6' { exit 0 }
+  '6' { Show-InstallNotes }
+  '7' { exit 0 }
   Default { Write-Error 'Opcion invalida.' }
 }
