@@ -57,6 +57,11 @@ Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
 6. **Instalacion de Docker (segun SO)**
    - Muestra pasos basicos de instalacion para Windows, macOS o Linux.
 
+## Enlaces oficiales (Docker)
+- Windows (Docker Desktop): https://www.docker.com/products/docker-desktop/
+- macOS (Docker Desktop): https://www.docker.com/products/docker-desktop/
+- Linux (Docker Engine): https://docs.docker.com/engine/install/
+
 ## Variables opcionales
 Puedes sobrescribir rutas si lo necesitas:
 
