@@ -159,10 +159,19 @@ backup_volume() {
     if [[ "$was_running" == "true" ]]; then
       read -r -p "Para backup consistente, detener qatrack-postgres? [s/N]: " stop_now
       if [[ "$stop_now" == "s" || "$stop_now" == "S" ]]; then
-        if docker compose version >/dev/null 2>&1; then
-          docker compose -f "$COMPOSE_FILE" stop qatrack-postgres
+        read -r -p "Detener todos los contenedores? (s=todos / n=solo postgres) [s/N]: " stop_all
+        if [[ "$stop_all" == "s" || "$stop_all" == "S" ]]; then
+          if docker compose version >/dev/null 2>&1; then
+            docker compose -f "$COMPOSE_FILE" stop
+          else
+            docker-compose -f "$COMPOSE_FILE" stop
+          fi
         else
-          docker-compose -f "$COMPOSE_FILE" stop qatrack-postgres
+          if docker compose version >/dev/null 2>&1; then
+            docker compose -f "$COMPOSE_FILE" stop qatrack-postgres
+          else
+            docker-compose -f "$COMPOSE_FILE" stop qatrack-postgres
+          fi
         fi
       fi
     fi
@@ -173,10 +182,18 @@ backup_volume() {
       sh -c "cd /data && tar -czf /backup/$(basename "$archive") ."
     echo "Backup creado: $archive"
     if [[ "$was_running" == "true" ]]; then
-      if docker compose version >/dev/null 2>&1; then
-        docker compose -f "$COMPOSE_FILE" up -d qatrack-postgres
+      if [[ "$stop_all" == "s" || "$stop_all" == "S" ]]; then
+        if docker compose version >/dev/null 2>&1; then
+          docker compose -f "$COMPOSE_FILE" up -d
+        else
+          docker-compose -f "$COMPOSE_FILE" up -d
+        fi
       else
-        docker-compose -f "$COMPOSE_FILE" up -d qatrack-postgres
+        if docker compose version >/dev/null 2>&1; then
+          docker compose -f "$COMPOSE_FILE" up -d qatrack-postgres
+        else
+          docker-compose -f "$COMPOSE_FILE" up -d qatrack-postgres
+        fi
       fi
     fi
   else

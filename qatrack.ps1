@@ -101,13 +101,22 @@ function Backup-Volume {
   if ($wasRunning) {
     $stopNow = Read-Host 'Para backup consistente, detener qatrack-postgres? [s/N]'
     if ($stopNow -eq 's' -or $stopNow -eq 'S') {
-      & docker compose -f $ComposeFile stop qatrack-postgres | Out-Null
+      $stopAll = Read-Host 'Detener todos los contenedores? (s=todos / n=solo postgres) [s/N]'
+      if ($stopAll -eq 's' -or $stopAll -eq 'S') {
+        & docker compose -f $ComposeFile stop | Out-Null
+      } else {
+        & docker compose -f $ComposeFile stop qatrack-postgres | Out-Null
+      }
     }
   }
   & docker run --rm -v "${volumeName}:/data:ro" -v "${BackupDir}:/backup" alpine:3.19 sh -c "cd /data && tar -czf /backup/$(Split-Path -Leaf $archive) ."
   Write-Host "Backup creado: $archive"
   if ($wasRunning) {
-    & docker compose -f $ComposeFile up -d qatrack-postgres | Out-Null
+    if ($stopAll -eq 's' -or $stopAll -eq 'S') {
+      & docker compose -f $ComposeFile up -d | Out-Null
+    } else {
+      & docker compose -f $ComposeFile up -d qatrack-postgres | Out-Null
+    }
   }
 }
 
