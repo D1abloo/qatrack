@@ -189,12 +189,13 @@ function Delete-Backups {
     $files | ForEach-Object {
       $name = $_.Name
       $m = [regex]::Match($name, '_([0-9]{8}_[0-9]{6})\\.tar\\.gz$')
+      $size = [Math]::Round($_.Length / 1MB, 2)
       if ($m.Success) {
         $ts = $m.Groups[1].Value
         $date = "{0}-{1}-{2} {3}:{4}:{5}" -f $ts.Substring(0,4), $ts.Substring(4,2), $ts.Substring(6,2), $ts.Substring(9,2), $ts.Substring(11,2), $ts.Substring(13,2)
-        Write-Host "$name  ($date)"
+        Write-Host "$name  ($date, ${size}MB)"
       } else {
-        Write-Host $name
+        Write-Host "$name  (${size}MB)"
       }
     }
   } else {

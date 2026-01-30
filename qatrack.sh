@@ -302,9 +302,11 @@ delete_backups() {
       ts="$(echo "$base" | sed -E 's/.*_([0-9]{8}_[0-9]{6})\\.tar\\.gz/\\1/')"
       if [[ "$ts" =~ ^[0-9]{8}_[0-9]{6}$ ]]; then
         date_fmt="${ts:0:4}-${ts:4:2}-${ts:6:2} ${ts:9:2}:${ts:11:2}:${ts:13:2}"
-        printf "%s  (%s)\\n" "$base" "$date_fmt"
+        size="$(du -h "$f" | awk '{print $1}')"
+        printf "%s  (%s, %s)\\n" "$base" "$date_fmt" "$size"
       else
-        printf "%s\\n" "$base"
+        size="$(du -h "$f" | awk '{print $1}')"
+        printf "%s  (%s)\\n" "$base" "$size"
       fi
     done < <(ls -1 "$BACKUP_DIR"/*.tar.gz 2>/dev/null)
   else
