@@ -157,16 +157,24 @@ restore_volume() {
 download_repo() {
   local repo_url dest_dir os default_dir
   os="$(uname -s 2>/dev/null || true)"
-  read -r -p "URL del repositorio [${REPO_URL_DEFAULT}]: " repo_url
-  if [[ -z "$repo_url" ]]; then
-    repo_url="$REPO_URL_DEFAULT"
-  fi
+  repo_url="$REPO_URL_DEFAULT"
   if [[ "$os" == "Darwin" ]]; then
     default_dir="$HOME/Documents/qatrackplus"
   elif [[ "$os" =~ MINGW|MSYS|CYGWIN ]]; then
     default_dir="$HOME/qatrackplus"
   else
     default_dir="$HOME/qatrackplus"
+  fi
+  echo "Rutas sugeridas para descargar:"
+  echo "- $HOME"
+  if [[ -d "$HOME/Documents" ]]; then
+    echo "- $HOME/Documents"
+  fi
+  if [[ -d "$HOME/Desktop" ]]; then
+    echo "- $HOME/Desktop"
+  fi
+  if [[ -d "$HOME/Downloads" ]]; then
+    echo "- $HOME/Downloads"
   fi
   read -r -p "Ruta destino para descargar el repo [${default_dir}]: " dest_dir
   if [[ -z "$dest_dir" ]]; then
@@ -177,19 +185,14 @@ download_repo() {
     exit 1
   fi
   if [[ -d "$dest_dir/.git" ]]; then
-    if command -v git >/dev/null 2>&1; then
-      git -C "$dest_dir" pull
-    else
-      echo "git no esta instalado." >&2
-      exit 1
-    fi
+    echo "La carpeta ya contiene un repo. Elimina la carpeta o elige otra ruta." >&2
+    exit 1
+  fi
+  if command -v git >/dev/null 2>&1; then
+    git clone "$repo_url" "$dest_dir"
   else
-    if command -v git >/dev/null 2>&1; then
-      git clone "$repo_url" "$dest_dir"
-    else
-      echo "git no esta instalado." >&2
-      exit 1
-    fi
+    echo "git no esta instalado." >&2
+    exit 1
   fi
 
   echo "Ruta detectada de local_settings.py: $dest_dir/qatrack/local_settings.py"

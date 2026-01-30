@@ -96,17 +96,23 @@ function Restore-Volume {
 }
 
 function Download-Repo {
-  $repoUrl = Read-Host "URL del repositorio [$RepoUrlDefault]"
-  if (-not $repoUrl) { $repoUrl = $RepoUrlDefault }
+  $repoUrl = $RepoUrlDefault
   $defaultDir = Join-Path $HOME 'qatrackplus'
+  Write-Host 'Rutas sugeridas para descargar:'
+  Write-Host $HOME
+  $docs = Join-Path $HOME 'Documents'
+  $desk = Join-Path $HOME 'Desktop'
+  $down = Join-Path $HOME 'Downloads'
+  if (Test-Path $docs) { Write-Host $docs }
+  if (Test-Path $desk) { Write-Host $desk }
+  if (Test-Path $down) { Write-Host $down }
   $destDir = Read-Host "Ruta destino para descargar el repo [$defaultDir]"
   if (-not $destDir) { $destDir = $defaultDir }
 
   if (Test-Path (Join-Path $destDir '.git')) {
-    & git -C $destDir pull
-  } else {
-    & git clone $repoUrl $destDir
+    Write-Error 'La carpeta ya contiene un repo. Elimina la carpeta o elige otra ruta.'
   }
+  & git clone $repoUrl $destDir
 
   $lsPath = Join-Path $destDir 'qatrack\local_settings.py'
   Write-Host "Ruta detectada de local_settings.py: $lsPath"
