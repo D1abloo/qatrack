@@ -5,6 +5,7 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$SCRIPT_DIR"
 REPO_URL_DEFAULT="https://github.com/D1abloo/qatrack.git"
+CONFIG_BACKUP_DIR_FILE="$REPO_ROOT/.qatrack_backup_dir"
 
 LOCAL_SETTINGS="$REPO_ROOT/qatrack/local_settings.py"
 
@@ -85,6 +86,24 @@ COMPOSE_FILE="${COMPOSE_FILE:-$COMPOSE_DIR/docker-compose.yml}"
 BACKUP_DIR="${BACKUP_DIR:-$REPO_ROOT/backups}"
 VOLUME_NAME="${VOLUME_NAME:-qatrack-postgres-volume}"
 
+load_backup_dir() {
+  if [[ -f "$CONFIG_BACKUP_DIR_FILE" ]]; then
+    BACKUP_DIR="$(cat "$CONFIG_BACKUP_DIR_FILE")"
+  fi
+}
+
+set_backup_dir() {
+  read -r -p "Ruta para guardar backups: " new_dir
+  if [[ -z "$new_dir" ]]; then
+    echo "Ruta requerida." >&2
+    exit 1
+  fi
+  mkdir -p "$new_dir"
+  echo "$new_dir" > "$CONFIG_BACKUP_DIR_FILE"
+  BACKUP_DIR="$new_dir"
+  echo "Ruta de backups configurada: $BACKUP_DIR"
+}
+
 ensure_compose_file() {
   if [[ ! -f "$COMPOSE_FILE" ]]; then
     echo "No se encontro docker-compose: $COMPOSE_FILE" >&2
@@ -132,6 +151,7 @@ stop_containers() {
 }
 
 backup_volume() {
+  load_backup_dir
   mkdir -p "$BACKUP_DIR"
   local ts archive volume_name
   local cid was_running
@@ -204,10 +224,18 @@ backup_volume() {
 
 restore_volume() {
   local archive volume_name
-  read -r -p "Ruta del archivo .tar.gz: " archive
+  load_backup_dir
+  mkdir -p "$BACKUP_DIR"
+  echo "Backups disponibles en: $BACKUP_DIR"
+  ls -1 "$BACKUP_DIR"/*.tar.gz 2>/dev/null || echo "No hay backups .tar.gz"
+  read -r -p "Ruta o nombre del archivo .tar.gz: " archive
   if [[ -z "$archive" || ! -f "$archive" ]]; then
-    echo "No se encontro el archivo: $archive" >&2
-    exit 1
+    if [[ -n "$archive" && -f "$BACKUP_DIR/$archive" ]]; then
+      archive="$BACKUP_DIR/$archive"
+    else
+      echo "No se encontro el archivo: $archive" >&2
+      exit 1
+    fi
   fi
   volume_name="$(resolve_volume_name)"
   if ! docker volume inspect "$volume_name" >/dev/null 2>&1; then
@@ -294,6 +322,7 @@ show_install_notes() {
 }
 
 delete_backups() {
+  load_backup_dir
   mkdir -p "$BACKUP_DIR"
   echo "Backups disponibles en: $BACKUP_DIR"
   if ls -1 "$BACKUP_DIR"/*.tar.gz >/dev/null 2>&1; then
@@ -339,7 +368,8 @@ echo "4) Restaurar backup de volumen"
 echo "5) Descargar/actualizar repo"
 echo "6) Instalacion de Docker (segun SO)"
 echo "7) Eliminar backups"
-echo "8) Salir"
+echo "8) Configurar ruta de backups"
+echo "9) Salir"
 read -r -p "Opcion: " choice
 
 case "$choice" in
@@ -367,6 +397,9 @@ case "$choice" in
     delete_backups
     ;;
   8)
+    set_backup_dir
+    ;;
+  9)
     exit 0
     ;;
   *)

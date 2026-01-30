@@ -63,6 +63,9 @@ Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
 7. **Eliminar backups**
    - Lista y elimina backups `.tar.gz` en la carpeta `backups/`.
    - Muestra fecha/hora y tamaño de cada backup.
+8. **Configurar ruta de backups**
+   - Define la carpeta donde se guardan/restauran los backups.
+   - El valor queda guardado en `.qatrack_backup_dir`.
 
 ## Enlaces oficiales (Docker)
 - Windows (Docker Desktop): https://www.docker.com/products/docker-desktop/

@@ -3,6 +3,7 @@ $ErrorActionPreference = 'Stop'
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $RepoRoot = $ScriptDir
 $RepoUrlDefault = 'https://github.com/D1abloo/qatrack.git'
+$ConfigBackupDirFile = Join-Path $RepoRoot '.qatrack_backup_dir'
 
 $LocalSettings = Join-Path $RepoRoot 'qatrack\local_settings.py'
 
@@ -49,6 +50,21 @@ $ComposeFile = if ($env:COMPOSE_FILE) { $env:COMPOSE_FILE } else { Join-Path $Co
 $BackupDir = if ($env:BACKUP_DIR) { $env:BACKUP_DIR } else { Join-Path $RepoRoot 'backups' }
 $VolumeName = if ($env:VOLUME_NAME) { $env:VOLUME_NAME } else { 'qatrack-postgres-volume' }
 
+function Load-BackupDir {
+  if (Test-Path $ConfigBackupDirFile) {
+    $BackupDir = Get-Content -Raw $ConfigBackupDirFile
+  }
+}
+
+function Set-BackupDir {
+  $newDir = Read-Host 'Ruta para guardar backups'
+  if (-not $newDir) { Write-Error 'Ruta requerida.' }
+  New-Item -ItemType Directory -Force -Path $newDir | Out-Null
+  Set-Content -Path $ConfigBackupDirFile -Value $newDir
+  $script:BackupDir = $newDir
+  Write-Host "Ruta de backups configurada: $BackupDir"
+}
+
 function Ensure-ComposeFile {
   if (-not (Test-Path $ComposeFile)) {
     Write-Error "No se encontro docker-compose: $ComposeFile"
@@ -79,6 +95,7 @@ function Stop-Containers {
 }
 
 function Backup-Volume {
+  Load-BackupDir
   New-Item -ItemType Directory -Force -Path $BackupDir | Out-Null
   $ts = Get-Date -Format 'yyyyMMdd_HHmmss'
   $volumeName = Resolve-VolumeName
@@ -121,9 +138,17 @@ function Backup-Volume {
 }
 
 function Restore-Volume {
-  $archive = Read-Host 'Ruta del archivo .tar.gz'
+  Load-BackupDir
+  New-Item -ItemType Directory -Force -Path $BackupDir | Out-Null
+  Write-Host "Backups disponibles en: $BackupDir"
+  Get-ChildItem -Path $BackupDir -Filter '*.tar.gz' -ErrorAction SilentlyContinue | ForEach-Object { Write-Host $_.Name }
+  $archive = Read-Host 'Ruta o nombre del archivo .tar.gz'
   if (-not (Test-Path $archive)) {
-    Write-Error "No se encontro el archivo: $archive"
+    $tryPath = Join-Path $BackupDir $archive
+    if (-not (Test-Path $tryPath)) {
+      Write-Error "No se encontro el archivo: $archive"
+    }
+    $archive = $tryPath
   }
   $volumeName = Resolve-VolumeName
   & docker volume inspect $volumeName | Out-Null
@@ -182,6 +207,7 @@ function Show-InstallNotes {
 }
 
 function Delete-Backups {
+  Load-BackupDir
   New-Item -ItemType Directory -Force -Path $BackupDir | Out-Null
   Write-Host "Backups disponibles en: $BackupDir"
   $files = Get-ChildItem -Path $BackupDir -Filter '*.tar.gz' -ErrorAction SilentlyContinue
@@ -225,7 +251,8 @@ Write-Host '4) Restaurar backup de volumen'
 Write-Host '5) Descargar/actualizar repo'
 Write-Host '6) Instalacion de Docker (segun SO)'
 Write-Host '7) Eliminar backups'
-Write-Host '8) Salir'
+Write-Host '8) Configurar ruta de backups'
+Write-Host '9) Salir'
 $choice = Read-Host 'Opcion'
 
 switch ($choice) {
@@ -240,6 +267,7 @@ switch ($choice) {
   '5' { Download-Repo }
   '6' { Show-InstallNotes }
   '7' { Delete-Backups }
-  '8' { exit 0 }
+  '8' { Set-BackupDir }
+  '9' { exit 0 }
   Default { Write-Error 'Opcion invalida.' }
 }
