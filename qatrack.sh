@@ -228,9 +228,32 @@ restore_volume() {
   load_backup_dir
   mkdir -p "$BACKUP_DIR"
   echo "Backups disponibles en: $BACKUP_DIR"
-  ls -1 "$BACKUP_DIR"/*.tar.gz 2>/dev/null || echo "No hay backups .tar.gz"
-  read -r -p "Ruta o nombre del archivo .tar.gz: " archive
+  local files=()
+  if ls -1 "$BACKUP_DIR"/*.tar.gz >/dev/null 2>&1; then
+    local i=1
+    while IFS= read -r f; do
+      files+=("$f")
+      base="$(basename "$f")"
+      ts="$(echo "$base" | sed -E 's/.*_([0-9]{8}_[0-9]{6})\\.tar\\.gz/\\1/')"
+      if [[ "$ts" =~ ^[0-9]{8}_[0-9]{6}$ ]]; then
+        date_fmt="${ts:0:4}-${ts:4:2}-${ts:6:2} ${ts:9:2}:${ts:11:2}:${ts:13:2}"
+        printf "%d) %s  (%s)\\n" "$i" "$base" "$date_fmt"
+      else
+        printf "%d) %s\\n" "$i" "$base"
+      fi
+      i=$((i + 1))
+    done < <(ls -1 "$BACKUP_DIR"/*.tar.gz 2>/dev/null)
+  else
+    echo "No hay backups .tar.gz"
+  fi
+  read -r -p "Numero o ruta/nombre del backup: " archive
   if [[ -z "$archive" || ! -f "$archive" ]]; then
+    if [[ "$archive" =~ ^[0-9]+$ ]] && [[ "${#files[@]}" -gt 0 ]]; then
+      idx=$((archive - 1))
+      if [[ $idx -ge 0 && $idx -lt ${#files[@]} ]]; then
+        archive="${files[$idx]}"
+      fi
+    fi
     if [[ -n "$archive" && -f "$BACKUP_DIR/$archive" ]]; then
       archive="$BACKUP_DIR/$archive"
     else

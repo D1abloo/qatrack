@@ -142,8 +142,31 @@ function Restore-Volume {
   Load-BackupDir
   New-Item -ItemType Directory -Force -Path $BackupDir | Out-Null
   Write-Host "Backups disponibles en: $BackupDir"
-  Get-ChildItem -Path $BackupDir -Filter '*.tar.gz' -ErrorAction SilentlyContinue | ForEach-Object { Write-Host $_.Name }
-  $archive = Read-Host 'Ruta o nombre del archivo .tar.gz'
+  $files = Get-ChildItem -Path $BackupDir -Filter '*.tar.gz' -ErrorAction SilentlyContinue | Sort-Object Name
+  if ($files) {
+    $i = 1
+    foreach ($f in $files) {
+      $name = $f.Name
+      $m = [regex]::Match($name, '_([0-9]{8}_[0-9]{6})\\.tar\\.gz$')
+      if ($m.Success) {
+        $ts = $m.Groups[1].Value
+        $date = "{0}-{1}-{2} {3}:{4}:{5}" -f $ts.Substring(0,4), $ts.Substring(4,2), $ts.Substring(6,2), $ts.Substring(9,2), $ts.Substring(11,2), $ts.Substring(13,2)
+        Write-Host "$i) $name  ($date)"
+      } else {
+        Write-Host "$i) $name"
+      }
+      $i++
+    }
+  } else {
+    Write-Host 'No hay backups .tar.gz'
+  }
+  $archive = Read-Host 'Numero o ruta/nombre del backup'
+  if ($archive -match '^[0-9]+$' -and $files) {
+    $idx = [int]$archive - 1
+    if ($idx -ge 0 -and $idx -lt $files.Count) {
+      $archive = $files[$idx].FullName
+    }
+  }
   if (-not (Test-Path $archive)) {
     $tryPath = Join-Path $BackupDir $archive
     if (-not (Test-Path $tryPath)) {
