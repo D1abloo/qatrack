@@ -84,7 +84,7 @@ function Resolve-VolumeName {
 
 function Start-Containers {
   Ensure-ComposeFile
-  Write-Host 'HAY QUE ESPERAR AL MENOS 10 - 15 SEGUNDOS QUE EL CONTENDOR DE NGINX CARGUE CORRECTAMENTE!'
+  Write-Host 'HAY QUE ESPERAR AL MENOS 10 - 15 SEGUNDOS QUE EL CONTENDOR DE NGINX CARGUE CORRECTAMENTE. UNA VEZ CARGADO LOS CONTENEDORES, ESPERAR 30 SEGUNDOS A QUE NGINX CARGUE POR COMPLETO.'
   & docker compose -f $ComposeFile up -d qatrack-postgres qatrack-django
   & docker compose -f $ComposeFile up -d qatrack-nginx
 }
@@ -134,6 +134,7 @@ function Backup-Volume {
     } else {
       & docker compose -f $ComposeFile up -d qatrack-postgres | Out-Null
     }
+    Write-Host 'Backup finalizado. Esperar al menos 30 segundos para que el servicio inicie correctamente.'
   }
 }
 
@@ -243,31 +244,39 @@ function Delete-Backups {
   }
 }
 
-Write-Host 'Seleccione una opcion:'
-Write-Host '1) Ejecutar (actualizar IP y arrancar contenedores)'
-Write-Host '2) Parar contenedores'
-Write-Host '3) Crear backup de volumen'
-Write-Host '4) Restaurar backup de volumen'
-Write-Host '5) Descargar/actualizar repo'
-Write-Host '6) Instalacion de Docker (segun SO)'
-Write-Host '7) Eliminar backups'
-Write-Host '8) Configurar ruta de backups'
-Write-Host '9) Salir'
-$choice = Read-Host 'Opcion'
+function Pause-Menu {
+  Write-Host ''
+  $null = Read-Host 'Presiona Enter para volver al menu (Ctrl+C para salir)'
+}
 
-switch ($choice) {
-  '1' {
-    $ip = Update-AllowedHosts
-    Start-Containers
-    Write-Host "IP agregada a ALLOWED_HOSTS: $ip"
+while ($true) {
+  Write-Host 'Seleccione una opcion:'
+  Write-Host '1) Ejecutar (actualizar IP y arrancar contenedores)'
+  Write-Host '2) Parar contenedores'
+  Write-Host '3) Crear backup de volumen'
+  Write-Host '4) Restaurar backup de volumen'
+  Write-Host '5) Descargar/actualizar repo'
+  Write-Host '6) Instalacion de Docker (segun SO)'
+  Write-Host '7) Eliminar backups'
+  Write-Host '8) Configurar ruta de backups'
+  Write-Host '9) Salir'
+  $choice = Read-Host 'Opcion'
+
+  switch ($choice) {
+    '1' {
+      $ip = Update-AllowedHosts
+      Start-Containers
+      Write-Host "IP agregada a ALLOWED_HOSTS: $ip"
+      Pause-Menu
+    }
+    '2' { Stop-Containers; Pause-Menu }
+    '3' { Backup-Volume; Pause-Menu }
+    '4' { Restore-Volume; Pause-Menu }
+    '5' { Download-Repo; Pause-Menu }
+    '6' { Show-InstallNotes; Pause-Menu }
+    '7' { Delete-Backups; Pause-Menu }
+    '8' { Set-BackupDir; Pause-Menu }
+    '9' { break }
+    Default { Write-Error 'Opcion invalida.'; Pause-Menu }
   }
-  '2' { Stop-Containers }
-  '3' { Backup-Volume }
-  '4' { Restore-Volume }
-  '5' { Download-Repo }
-  '6' { Show-InstallNotes }
-  '7' { Delete-Backups }
-  '8' { Set-BackupDir }
-  '9' { exit 0 }
-  Default { Write-Error 'Opcion invalida.' }
 }

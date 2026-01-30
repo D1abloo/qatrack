@@ -131,7 +131,7 @@ resolve_volume_name() {
 
 start_containers() {
   ensure_compose_file
-  echo "HAY QUE ESPERAR AL MENOS 10 - 15 SEGUNDOS QUE EL CONTENDOR DE NGINX CARGUE CORRECTAMENTE. UNA VEZ CARGADO LOS CONTENEDORES, ESPERAR 15 SEGUNDOS A QUE NGINX CARGUE POR COMPLETO."
+  echo "HAY QUE ESPERAR AL MENOS 10 - 15 SEGUNDOS QUE EL CONTENDOR DE NGINX CARGUE CORRECTAMENTE. UNA VEZ CARGADO LOS CONTENEDORES, ESPERAR 30 SEGUNDOS A QUE NGINX CARGUE POR COMPLETO."
   if docker compose version >/dev/null 2>&1; then
     docker compose -f "$COMPOSE_FILE" up -d qatrack-postgres qatrack-django
     docker compose -f "$COMPOSE_FILE" up -d qatrack-nginx
@@ -215,6 +215,7 @@ backup_volume() {
           docker-compose -f "$COMPOSE_FILE" up -d qatrack-postgres
         fi
       fi
+      echo "Backup finalizado. Esperar al menos 30 segundos para que el servicio inicie correctamente."
     fi
   else
     echo "No existe el volumen: $volume_name" >&2
@@ -360,50 +361,66 @@ delete_backups() {
   fi
 }
 
-echo "Seleccione una opcion:"
-echo "1) Ejecutar (actualizar IP y arrancar contenedores)"
-echo "2) Parar contenedores"
-echo "3) Crear backup de volumen"
-echo "4) Restaurar backup de volumen"
-echo "5) Descargar/actualizar repo"
-echo "6) Instalacion de Docker (segun SO)"
-echo "7) Eliminar backups"
-echo "8) Configurar ruta de backups"
-echo "9) Salir"
-read -r -p "Opcion: " choice
+pause_menu() {
+  echo
+  read -r -n 1 -s -p "Presiona cualquier tecla para volver al menu (Ctrl+C para salir)..."
+  echo
+}
 
-case "$choice" in
-  1)
-    update_allowed_hosts
-    start_containers
-    echo "IP agregada a ALLOWED_HOSTS: $ip"
-    ;;
-  2)
-    stop_containers
-    ;;
-  3)
-    backup_volume
-    ;;
-  4)
-    restore_volume
-    ;;
-  5)
-    download_repo
-    ;;
-  6)
-    show_install_notes
-    ;;
-  7)
-    delete_backups
-    ;;
-  8)
-    set_backup_dir
-    ;;
-  9)
-    exit 0
-    ;;
-  *)
-    echo "Opcion invalida." >&2
-    exit 1
-    ;;
-esac
+echo "Seleccione una opcion:"
+while true; do
+  echo "1) Ejecutar (actualizar IP y arrancar contenedores)"
+  echo "2) Parar contenedores"
+  echo "3) Crear backup de volumen"
+  echo "4) Restaurar backup de volumen"
+  echo "5) Descargar/actualizar repo"
+  echo "6) Instalacion de Docker (segun SO)"
+  echo "7) Eliminar backups"
+  echo "8) Configurar ruta de backups"
+  echo "9) Salir"
+  read -r -p "Opcion: " choice
+
+  case "$choice" in
+    1)
+      update_allowed_hosts
+      start_containers
+      echo "IP agregada a ALLOWED_HOSTS: $ip"
+      pause_menu
+      ;;
+    2)
+      stop_containers
+      pause_menu
+      ;;
+    3)
+      backup_volume
+      pause_menu
+      ;;
+    4)
+      restore_volume
+      pause_menu
+      ;;
+    5)
+      download_repo
+      pause_menu
+      ;;
+    6)
+      show_install_notes
+      pause_menu
+      ;;
+    7)
+      delete_backups
+      pause_menu
+      ;;
+    8)
+      set_backup_dir
+      pause_menu
+      ;;
+    9)
+      break
+      ;;
+    *)
+      echo "Opcion invalida." >&2
+      pause_menu
+      ;;
+  esac
+done
