@@ -52,8 +52,9 @@ Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
    - Ofrece arrancar los contenedores al finalizar.
 
 5. **Descargar/actualizar repo**
-   - Permite clonar o actualizar el repositorio completo en otra carpeta.
-   - Por defecto usa: `https://github.com/D1abloo/qatrack.git`.
+   - Descarga (clona) el repositorio completo en la ruta indicada.
+   - Usa automaticamente: `https://github.com/D1abloo/qatrack.git`.
+   - Si la carpeta ya tiene un repo, el script se detiene y pide otra ruta.
 6. **Instalacion de Docker (segun SO)**
    - Muestra pasos basicos de instalacion para Windows, macOS o Linux.
 
