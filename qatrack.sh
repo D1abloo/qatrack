@@ -1,0 +1,219 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Resolve repo root relative to this script.
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$SCRIPT_DIR"
+REPO_URL_DEFAULT="https://github.com/D1abloo/qatrack.git"
+
+LOCAL_SETTINGS="$REPO_ROOT/qatrack/local_settings.py"
+
+ensure_local_settings() {
+  if [[ ! -f "$LOCAL_SETTINGS" ]]; then
+    echo "No se encontro $LOCAL_SETTINGS" >&2
+    exit 1
+  fi
+}
+
+update_allowed_hosts() {
+  ensure_local_settings
+  # Determine OS, primary interface, and IP.
+  local os iface
+  os="$(uname -s 2>/dev/null || true)"
+  ip=""
+
+  if [[ "$os" == "Darwin" ]]; then
+    iface="$(route -n get default 2>/dev/null | awk '/interface:/{print $2; exit}')"
+    if [[ -z "${iface:-}" ]]; then
+      iface="en0"
+    fi
+    ip="$(ipconfig getifaddr "$iface" 2>/dev/null || true)"
+    if [[ -z "${ip:-}" ]]; then
+      ip="$(ifconfig 2>/dev/null | awk '/inet / && $2 != "127.0.0.1" {print $2; exit}')"
+    fi
+  else
+    iface="$(ip route 2>/dev/null | awk '/^default /{print $5; exit}')"
+    if [[ -n "${iface:-}" ]]; then
+      ip="$(ip -4 addr show "$iface" 2>/dev/null | awk '/inet /{print $2}' | cut -d/ -f1 | head -n1)"
+    fi
+    if [[ -z "${ip:-}" ]]; then
+      ip="$(hostname -I 2>/dev/null | awk '{print $1}')"
+    fi
+    if [[ -z "${ip:-}" ]]; then
+      ip="$(ifconfig 2>/dev/null | awk '/inet / && $2 != "127.0.0.1" {print $2; exit}')"
+    fi
+  fi
+
+  if [[ -z "${ip:-}" ]]; then
+    echo "No se pudo detectar la IP de la red." >&2
+    exit 1
+  fi
+
+  export NEW_ALLOWED_IP="$ip"
+  export LOCAL_SETTINGS="$LOCAL_SETTINGS"
+
+  python3 - <<'PY'
+import ast
+import os
+import re
+from pathlib import Path
+
+path = Path(os.environ["LOCAL_SETTINGS"]) if "LOCAL_SETTINGS" in os.environ else Path("qatrack/local_settings.py")
+text = path.read_text()
+
+m = re.search(r"(?m)^ALLOWED_HOSTS\s*=\s*(\[[^\n]*\])", text)
+if not m:
+    raise SystemExit("No se encontro ALLOWED_HOSTS en local_settings.py")
+
+hosts = ast.literal_eval(m.group(1))
+if not isinstance(hosts, list):
+    raise SystemExit("ALLOWED_HOSTS no es una lista")
+
+ip = os.environ["NEW_ALLOWED_IP"]
+# Limpiar: dejar solo la IP actual y luego 127.0.0.1 (sin duplicados)
+clean_hosts = [ip, "127.0.0.1"]
+clean_hosts = list(dict.fromkeys(clean_hosts))
+
+new_list = "[" + ", ".join(repr(h) for h in clean_hosts) + "]"
+text = text[: m.start(1)] + new_list + text[m.end(1) :]
+path.write_text(text)
+PY
+}
+
+COMPOSE_DIR="${COMPOSE_DIR:-$REPO_ROOT/deploy/docker}"
+COMPOSE_FILE="${COMPOSE_FILE:-$COMPOSE_DIR/docker-compose.yml}"
+BACKUP_DIR="${BACKUP_DIR:-$REPO_ROOT/backups}"
+VOLUME_NAME="${VOLUME_NAME:-qatrack-postgres-volume}"
+
+ensure_compose_file() {
+  if [[ ! -f "$COMPOSE_FILE" ]]; then
+    echo "No se encontro docker-compose: $COMPOSE_FILE" >&2
+    exit 1
+  fi
+}
+
+start_containers() {
+  ensure_compose_file
+  echo "HAY QUE ESPERAR AL MENOS 10 - 15 SEGUNDOS QUE EL CONTENDOR DE NGINX CARGUE CORRECTAMENTE. UNA VEZ CARGADO LOS CONTENEDORES, ESPERAR 15 SEGUNDOS A QUE NGINX CARGUE POR COMPLETO."
+  if docker compose version >/dev/null 2>&1; then
+    docker compose -f "$COMPOSE_FILE" up -d qatrack-postgres qatrack-django
+    docker compose -f "$COMPOSE_FILE" up -d qatrack-nginx
+  else
+    docker-compose -f "$COMPOSE_FILE" up -d qatrack-postgres qatrack-django
+    docker-compose -f "$COMPOSE_FILE" up -d qatrack-nginx
+  fi
+}
+
+stop_containers() {
+  ensure_compose_file
+  if docker compose version >/dev/null 2>&1; then
+    docker compose -f "$COMPOSE_FILE" stop
+  else
+    docker-compose -f "$COMPOSE_FILE" stop
+  fi
+}
+
+backup_volume() {
+  mkdir -p "$BACKUP_DIR"
+  local ts archive
+  ts="$(date +%Y%m%d_%H%M%S)"
+  archive="$BACKUP_DIR/${VOLUME_NAME}_${ts}.tar.gz"
+  if docker volume inspect "$VOLUME_NAME" >/dev/null 2>&1; then
+    docker run --rm \
+      -v "$VOLUME_NAME":/data:ro \
+      -v "$BACKUP_DIR":/backup \
+      alpine:3.19 \
+      sh -c "cd /data && tar -czf /backup/$(basename "$archive") ."
+    echo "Backup creado: $archive"
+  else
+    echo "No existe el volumen: $VOLUME_NAME" >&2
+    exit 1
+  fi
+}
+
+restore_volume() {
+  local archive
+  read -r -p "Ruta del archivo .tar.gz: " archive
+  if [[ -z "$archive" || ! -f "$archive" ]]; then
+    echo "No se encontro el archivo: $archive" >&2
+    exit 1
+  fi
+  if ! docker volume inspect "$VOLUME_NAME" >/dev/null 2>&1; then
+    docker volume create "$VOLUME_NAME" >/dev/null
+  fi
+  docker run --rm \
+    -v "$VOLUME_NAME":/data \
+    -v "$(cd "$(dirname "$archive")" && pwd)":/backup \
+    alpine:3.19 \
+    sh -c "cd /data && rm -rf ./* && tar -xzf /backup/$(basename "$archive")"
+  echo "Backup restaurado en volumen: $VOLUME_NAME"
+
+  read -r -p "Desea arrancar contenedores ahora? [s/N]: " start_now
+  if [[ "$start_now" == "s" || "$start_now" == "S" ]]; then
+    start_containers
+  fi
+}
+
+download_repo() {
+  local repo_url dest_dir
+  read -r -p "URL del repositorio [${REPO_URL_DEFAULT}]: " repo_url
+  if [[ -z "$repo_url" ]]; then
+    repo_url="$REPO_URL_DEFAULT"
+  fi
+  read -r -p "Ruta destino para descargar el repo: " dest_dir
+  if [[ -z "$dest_dir" ]]; then
+    echo "Ruta destino requerida." >&2
+    exit 1
+  fi
+  if [[ -d "$dest_dir/.git" ]]; then
+    if command -v git >/dev/null 2>&1; then
+      git -C "$dest_dir" pull
+    else
+      echo "git no esta instalado." >&2
+      exit 1
+    fi
+  else
+    if command -v git >/dev/null 2>&1; then
+      git clone "$repo_url" "$dest_dir"
+    else
+      echo "git no esta instalado." >&2
+      exit 1
+    fi
+  fi
+}
+
+echo "Seleccione una opcion:"
+echo "1) Ejecutar (actualizar IP y arrancar contenedores)"
+echo "2) Parar contenedores"
+echo "3) Crear backup de volumen"
+echo "4) Restaurar backup de volumen"
+echo "5) Descargar/actualizar repo"
+echo "6) Salir"
+read -r -p "Opcion: " choice
+
+case "$choice" in
+  1)
+    update_allowed_hosts
+    start_containers
+    echo "IP agregada a ALLOWED_HOSTS: $ip"
+    ;;
+  2)
+    stop_containers
+    ;;
+  3)
+    backup_volume
+    ;;
+  4)
+    restore_volume
+    ;;
+  5)
+    download_repo
+    ;;
+  6)
+    exit 0
+    ;;
+  *)
+    echo "Opcion invalida." >&2
+    exit 1
+    ;;
+esac

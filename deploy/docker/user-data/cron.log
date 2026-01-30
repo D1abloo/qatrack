@@ -1,0 +1,2 @@
+Password: 
+pg_dump: error: connection to server at "qatrack-postgres" (172.18.0.2), port 5432 failed: fe_sendauth: no password supplied

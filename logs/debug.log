@@ -1,0 +1,2 @@
+[29/Dec/2025 17:51:15] ERROR [django.security.DisallowedHost:75] Invalid HTTP_HOST header: '192.168.1.18'. You may need to add '192.168.1.18' to ALLOWED_HOSTS.
+[29/Dec/2025 17:51:19] ERROR [django.security.DisallowedHost:75] Invalid HTTP_HOST header: '192.168.1.18'. You may need to add '192.168.1.18' to ALLOWED_HOSTS.

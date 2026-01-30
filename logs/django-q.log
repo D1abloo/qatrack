@@ -1,0 +1,148 @@
+[23/Dec/2025 17:00:06] INFO [django-q:65] qatrack.qa.tasks.clean_autosaves schedule created and next run set to 2025-12-24 04:00:06.878178+00:00
+[23/Dec/2025 17:00:06] INFO [django-q:65] qatrack.notifications.qcscheduling.tasks.run_scheduling_notices schedule created and next run set to 2025-12-23 17:07:30+00:00
+[23/Dec/2025 17:00:06] INFO [django-q:65] qatrack.notifications.qcreview.tasks.run_review_notices schedule created and next run set to 2025-12-23 17:07:30+00:00
+[23/Dec/2025 17:00:06] INFO [django-q:65] qatrack.notifications.service_log_review.tasks.run_service_event_review_notices schedule created and next run set to 2025-12-23 17:07:30+00:00
+[23/Dec/2025 17:00:06] INFO [django-q:65] qatrack.notifications.service_log_scheduling.tasks.run_scheduling_notices schedule created and next run set to 2025-12-23 17:07:30+00:00
+[23/Dec/2025 17:00:06] INFO [django-q:65] qatrack.notifications.faults_review.tasks.run_faults_review_notices schedule created and next run set to 2025-12-23 17:07:30+00:00
+[23/Dec/2025 17:04:19] INFO [django-q:65] qatrack.qa.tasks.clean_autosaves schedule created and next run set to 2025-12-24 04:04:19.866824+00:00
+[23/Dec/2025 17:04:19] INFO [django-q:65] qatrack.notifications.qcscheduling.tasks.run_scheduling_notices schedule created and next run set to 2025-12-23 17:07:30+00:00
+[23/Dec/2025 17:04:19] INFO [django-q:65] qatrack.notifications.qcreview.tasks.run_review_notices schedule created and next run set to 2025-12-23 17:07:30+00:00
+[23/Dec/2025 17:04:19] INFO [django-q:65] qatrack.notifications.service_log_review.tasks.run_service_event_review_notices schedule created and next run set to 2025-12-23 17:07:30+00:00
+[23/Dec/2025 17:04:19] INFO [django-q:65] qatrack.notifications.service_log_scheduling.tasks.run_scheduling_notices schedule created and next run set to 2025-12-23 17:07:30+00:00
+[23/Dec/2025 17:04:19] INFO [django-q:65] qatrack.notifications.faults_review.tasks.run_faults_review_notices schedule created and next run set to 2025-12-23 17:07:30+00:00
+[26/Dec/2025 08:32:04] INFO [django-q:53] qatrack.qa.tasks.clean_autosaves next run updated to 2025-12-27 04:32:04.597271+00:00
+[26/Dec/2025 08:32:04] INFO [django-q:53] qatrack.notifications.qcscheduling.tasks.run_scheduling_notices next run updated to 2025-12-26 08:37:30+00:00
+[26/Dec/2025 08:32:04] INFO [django-q:53] qatrack.notifications.qcreview.tasks.run_review_notices next run updated to 2025-12-26 08:37:30+00:00
+[26/Dec/2025 08:32:04] INFO [django-q:53] qatrack.notifications.service_log_review.tasks.run_service_event_review_notices next run updated to 2025-12-26 08:37:30+00:00
+[26/Dec/2025 08:32:04] INFO [django-q:53] qatrack.notifications.service_log_scheduling.tasks.run_scheduling_notices next run updated to 2025-12-26 08:37:30+00:00
+[26/Dec/2025 08:32:04] INFO [django-q:53] qatrack.notifications.faults_review.tasks.run_faults_review_notices next run updated to 2025-12-26 08:37:30+00:00
+[26/Dec/2025 08:32:04] INFO [django-q:65] qatrack.reports.tasks.run_reports schedule created and next run set to 2025-12-26 08:37:30+00:00
+[26/Dec/2025 08:32:09] INFO [django-q:53] qatrack.qa.tasks.clean_autosaves next run updated to 2025-12-27 04:32:09.320362+00:00
+[26/Dec/2025 08:32:09] INFO [django-q:53] qatrack.notifications.qcscheduling.tasks.run_scheduling_notices next run updated to 2025-12-26 08:37:30+00:00
+[26/Dec/2025 08:32:09] INFO [django-q:53] qatrack.notifications.qcreview.tasks.run_review_notices next run updated to 2025-12-26 08:37:30+00:00
+[26/Dec/2025 08:32:09] INFO [django-q:53] qatrack.notifications.service_log_review.tasks.run_service_event_review_notices next run updated to 2025-12-26 08:37:30+00:00
+[26/Dec/2025 08:32:09] INFO [django-q:53] qatrack.notifications.service_log_scheduling.tasks.run_scheduling_notices next run updated to 2025-12-26 08:37:30+00:00
+[26/Dec/2025 08:32:09] INFO [django-q:53] qatrack.notifications.faults_review.tasks.run_faults_review_notices next run updated to 2025-12-26 08:37:30+00:00
+[26/Dec/2025 08:32:09] INFO [django-q:53] qatrack.reports.tasks.run_reports next run updated to 2025-12-26 08:37:30+00:00
+[29/Dec/2025 17:22:26] INFO [django-q:65] qatrack.qa.tasks.clean_autosaves schedule created and next run set to 2025-12-30 04:22:26.176689+00:00
+[29/Dec/2025 17:22:26] INFO [django-q:65] qatrack.notifications.qcscheduling.tasks.run_scheduling_notices schedule created and next run set to 2025-12-29 17:22:30+00:00
+[29/Dec/2025 17:22:26] INFO [django-q:65] qatrack.notifications.qcreview.tasks.run_review_notices schedule created and next run set to 2025-12-29 17:22:30+00:00
+[29/Dec/2025 17:22:26] INFO [django-q:65] qatrack.notifications.service_log_review.tasks.run_service_event_review_notices schedule created and next run set to 2025-12-29 17:22:30+00:00
+[29/Dec/2025 17:22:26] INFO [django-q:65] qatrack.notifications.service_log_scheduling.tasks.run_scheduling_notices schedule created and next run set to 2025-12-29 17:22:30+00:00
+[29/Dec/2025 17:22:26] INFO [django-q:65] qatrack.notifications.faults_review.tasks.run_faults_review_notices schedule created and next run set to 2025-12-29 17:22:30+00:00
+[29/Dec/2025 17:22:28] INFO [django-q:53] qatrack.qa.tasks.clean_autosaves next run updated to 2025-12-30 04:22:28.358830+00:00
+[29/Dec/2025 17:22:28] INFO [django-q:53] qatrack.notifications.qcscheduling.tasks.run_scheduling_notices next run updated to 2025-12-29 17:22:30+00:00
+[29/Dec/2025 17:22:28] INFO [django-q:53] qatrack.notifications.qcreview.tasks.run_review_notices next run updated to 2025-12-29 17:22:30+00:00
+[29/Dec/2025 17:22:28] INFO [django-q:53] qatrack.notifications.service_log_review.tasks.run_service_event_review_notices next run updated to 2025-12-29 17:22:30+00:00
+[29/Dec/2025 17:22:28] INFO [django-q:53] qatrack.notifications.service_log_scheduling.tasks.run_scheduling_notices next run updated to 2025-12-29 17:22:30+00:00
+[29/Dec/2025 17:22:28] INFO [django-q:53] qatrack.notifications.faults_review.tasks.run_faults_review_notices next run updated to 2025-12-29 17:22:30+00:00
+[29/Dec/2025 17:22:28] INFO [django-q:65] qatrack.reports.tasks.run_reports schedule created and next run set to 2025-12-29 17:22:30+00:00
+[29/Dec/2025 17:24:07] INFO [django-q:53] qatrack.qa.tasks.clean_autosaves next run updated to 2025-12-30 04:24:07.577296+00:00
+[29/Dec/2025 17:24:07] INFO [django-q:53] qatrack.notifications.qcscheduling.tasks.run_scheduling_notices next run updated to 2025-12-29 17:37:30+00:00
+[29/Dec/2025 17:24:07] INFO [django-q:53] qatrack.notifications.qcreview.tasks.run_review_notices next run updated to 2025-12-29 17:37:30+00:00
+[29/Dec/2025 17:24:07] INFO [django-q:53] qatrack.notifications.service_log_review.tasks.run_service_event_review_notices next run updated to 2025-12-29 17:37:30+00:00
+[29/Dec/2025 17:24:07] INFO [django-q:53] qatrack.notifications.service_log_scheduling.tasks.run_scheduling_notices next run updated to 2025-12-29 17:37:30+00:00
+[29/Dec/2025 17:24:07] INFO [django-q:53] qatrack.notifications.faults_review.tasks.run_faults_review_notices next run updated to 2025-12-29 17:37:30+00:00
+[29/Dec/2025 17:24:07] INFO [django-q:53] qatrack.reports.tasks.run_reports next run updated to 2025-12-29 17:37:30+00:00
+[29/Dec/2025 17:24:09] INFO [django-q:53] qatrack.qa.tasks.clean_autosaves next run updated to 2025-12-30 04:24:09.262211+00:00
+[29/Dec/2025 17:24:09] INFO [django-q:53] qatrack.notifications.qcscheduling.tasks.run_scheduling_notices next run updated to 2025-12-29 17:37:30+00:00
+[29/Dec/2025 17:24:09] INFO [django-q:53] qatrack.notifications.qcreview.tasks.run_review_notices next run updated to 2025-12-29 17:37:30+00:00
+[29/Dec/2025 17:24:09] INFO [django-q:53] qatrack.notifications.service_log_review.tasks.run_service_event_review_notices next run updated to 2025-12-29 17:37:30+00:00
+[29/Dec/2025 17:24:09] INFO [django-q:53] qatrack.notifications.service_log_scheduling.tasks.run_scheduling_notices next run updated to 2025-12-29 17:37:30+00:00
+[29/Dec/2025 17:24:09] INFO [django-q:53] qatrack.notifications.faults_review.tasks.run_faults_review_notices next run updated to 2025-12-29 17:37:30+00:00
+[29/Dec/2025 17:24:09] INFO [django-q:53] qatrack.reports.tasks.run_reports next run updated to 2025-12-29 17:37:30+00:00
+[29/Dec/2025 17:42:56] INFO [django-q:65] qatrack.qa.tasks.clean_autosaves schedule created and next run set to 2025-12-30 04:42:56.031435+00:00
+[29/Dec/2025 17:42:56] INFO [django-q:65] qatrack.notifications.qcscheduling.tasks.run_scheduling_notices schedule created and next run set to 2025-12-29 17:52:30+00:00
+[29/Dec/2025 17:42:56] INFO [django-q:65] qatrack.notifications.qcreview.tasks.run_review_notices schedule created and next run set to 2025-12-29 17:52:30+00:00
+[29/Dec/2025 17:42:56] INFO [django-q:65] qatrack.notifications.service_log_review.tasks.run_service_event_review_notices schedule created and next run set to 2025-12-29 17:52:30+00:00
+[29/Dec/2025 17:42:56] INFO [django-q:65] qatrack.notifications.service_log_scheduling.tasks.run_scheduling_notices schedule created and next run set to 2025-12-29 17:52:30+00:00
+[29/Dec/2025 17:42:56] INFO [django-q:65] qatrack.notifications.faults_review.tasks.run_faults_review_notices schedule created and next run set to 2025-12-29 17:52:30+00:00
+[29/Dec/2025 17:42:58] INFO [django-q:53] qatrack.qa.tasks.clean_autosaves next run updated to 2025-12-30 04:42:58.444375+00:00
+[29/Dec/2025 17:42:58] INFO [django-q:53] qatrack.notifications.qcscheduling.tasks.run_scheduling_notices next run updated to 2025-12-29 17:52:30+00:00
+[29/Dec/2025 17:42:58] INFO [django-q:53] qatrack.notifications.qcreview.tasks.run_review_notices next run updated to 2025-12-29 17:52:30+00:00
+[29/Dec/2025 17:42:58] INFO [django-q:53] qatrack.notifications.service_log_review.tasks.run_service_event_review_notices next run updated to 2025-12-29 17:52:30+00:00
+[29/Dec/2025 17:42:58] INFO [django-q:53] qatrack.notifications.service_log_scheduling.tasks.run_scheduling_notices next run updated to 2025-12-29 17:52:30+00:00
+[29/Dec/2025 17:42:58] INFO [django-q:53] qatrack.notifications.faults_review.tasks.run_faults_review_notices next run updated to 2025-12-29 17:52:30+00:00
+[29/Dec/2025 17:42:58] INFO [django-q:65] qatrack.reports.tasks.run_reports schedule created and next run set to 2025-12-29 17:52:30+00:00
+[29/Dec/2025 17:51:07] INFO [django-q:53] qatrack.qa.tasks.clean_autosaves next run updated to 2025-12-30 04:51:07.620357+00:00
+[29/Dec/2025 17:51:07] INFO [django-q:53] qatrack.notifications.qcscheduling.tasks.run_scheduling_notices next run updated to 2025-12-29 17:52:30+00:00
+[29/Dec/2025 17:51:07] INFO [django-q:53] qatrack.notifications.qcreview.tasks.run_review_notices next run updated to 2025-12-29 17:52:30+00:00
+[29/Dec/2025 17:51:07] INFO [django-q:53] qatrack.notifications.service_log_review.tasks.run_service_event_review_notices next run updated to 2025-12-29 17:52:30+00:00
+[29/Dec/2025 17:51:07] INFO [django-q:53] qatrack.notifications.service_log_scheduling.tasks.run_scheduling_notices next run updated to 2025-12-29 17:52:30+00:00
+[29/Dec/2025 17:51:07] INFO [django-q:53] qatrack.notifications.faults_review.tasks.run_faults_review_notices next run updated to 2025-12-29 17:52:30+00:00
+[29/Dec/2025 17:51:07] INFO [django-q:53] qatrack.reports.tasks.run_reports next run updated to 2025-12-29 17:52:30+00:00
+[29/Dec/2025 17:51:09] INFO [django-q:53] qatrack.qa.tasks.clean_autosaves next run updated to 2025-12-30 04:51:09.719441+00:00
+[29/Dec/2025 17:51:09] INFO [django-q:53] qatrack.notifications.qcscheduling.tasks.run_scheduling_notices next run updated to 2025-12-29 17:52:30+00:00
+[29/Dec/2025 17:51:09] INFO [django-q:53] qatrack.notifications.qcreview.tasks.run_review_notices next run updated to 2025-12-29 17:52:30+00:00
+[29/Dec/2025 17:51:09] INFO [django-q:53] qatrack.notifications.service_log_review.tasks.run_service_event_review_notices next run updated to 2025-12-29 17:52:30+00:00
+[29/Dec/2025 17:51:09] INFO [django-q:53] qatrack.notifications.service_log_scheduling.tasks.run_scheduling_notices next run updated to 2025-12-29 17:52:30+00:00
+[29/Dec/2025 17:51:09] INFO [django-q:53] qatrack.notifications.faults_review.tasks.run_faults_review_notices next run updated to 2025-12-29 17:52:30+00:00
+[29/Dec/2025 17:51:09] INFO [django-q:53] qatrack.reports.tasks.run_reports next run updated to 2025-12-29 17:52:30+00:00
+[29/Dec/2025 18:02:22] INFO [django-q:53] qatrack.qa.tasks.clean_autosaves next run updated to 2025-12-30 04:02:22.816241+00:00
+[29/Dec/2025 18:02:22] INFO [django-q:53] qatrack.notifications.qcscheduling.tasks.run_scheduling_notices next run updated to 2025-12-29 18:07:30+00:00
+[29/Dec/2025 18:02:22] INFO [django-q:53] qatrack.notifications.qcreview.tasks.run_review_notices next run updated to 2025-12-29 18:07:30+00:00
+[29/Dec/2025 18:02:22] INFO [django-q:53] qatrack.notifications.service_log_review.tasks.run_service_event_review_notices next run updated to 2025-12-29 18:07:30+00:00
+[29/Dec/2025 18:02:22] INFO [django-q:53] qatrack.notifications.service_log_scheduling.tasks.run_scheduling_notices next run updated to 2025-12-29 18:07:30+00:00
+[29/Dec/2025 18:02:22] INFO [django-q:53] qatrack.notifications.faults_review.tasks.run_faults_review_notices next run updated to 2025-12-29 18:07:30+00:00
+[29/Dec/2025 18:02:22] INFO [django-q:53] qatrack.reports.tasks.run_reports next run updated to 2025-12-29 18:07:30+00:00
+[29/Dec/2025 18:02:24] INFO [django-q:53] qatrack.qa.tasks.clean_autosaves next run updated to 2025-12-30 04:02:24.735585+00:00
+[29/Dec/2025 18:02:24] INFO [django-q:53] qatrack.notifications.qcscheduling.tasks.run_scheduling_notices next run updated to 2025-12-29 18:07:30+00:00
+[29/Dec/2025 18:02:24] INFO [django-q:53] qatrack.notifications.qcreview.tasks.run_review_notices next run updated to 2025-12-29 18:07:30+00:00
+[29/Dec/2025 18:02:24] INFO [django-q:53] qatrack.notifications.service_log_review.tasks.run_service_event_review_notices next run updated to 2025-12-29 18:07:30+00:00
+[29/Dec/2025 18:02:24] INFO [django-q:53] qatrack.notifications.service_log_scheduling.tasks.run_scheduling_notices next run updated to 2025-12-29 18:07:30+00:00
+[29/Dec/2025 18:02:24] INFO [django-q:53] qatrack.notifications.faults_review.tasks.run_faults_review_notices next run updated to 2025-12-29 18:07:30+00:00
+[29/Dec/2025 18:02:24] INFO [django-q:53] qatrack.reports.tasks.run_reports next run updated to 2025-12-29 18:07:30+00:00
+[29/Jan/2026 23:47:16] INFO [django-q:65] qatrack.qa.tasks.clean_autosaves schedule created and next run set to 2026-01-30 04:47:16.302425+00:00
+[29/Jan/2026 23:47:16] INFO [django-q:65] qatrack.notifications.qcscheduling.tasks.run_scheduling_notices schedule created and next run set to 2026-01-29 23:52:30+00:00
+[29/Jan/2026 23:47:16] INFO [django-q:65] qatrack.notifications.qcreview.tasks.run_review_notices schedule created and next run set to 2026-01-29 23:52:30+00:00
+[29/Jan/2026 23:47:16] INFO [django-q:65] qatrack.notifications.service_log_review.tasks.run_service_event_review_notices schedule created and next run set to 2026-01-29 23:52:30+00:00
+[29/Jan/2026 23:47:16] INFO [django-q:65] qatrack.notifications.service_log_scheduling.tasks.run_scheduling_notices schedule created and next run set to 2026-01-29 23:52:30+00:00
+[29/Jan/2026 23:47:16] INFO [django-q:65] qatrack.notifications.faults_review.tasks.run_faults_review_notices schedule created and next run set to 2026-01-29 23:52:30+00:00
+[29/Jan/2026 23:47:27] INFO [django-q:53] qatrack.qa.tasks.clean_autosaves next run updated to 2026-01-30 04:47:27.779169+00:00
+[29/Jan/2026 23:47:27] INFO [django-q:53] qatrack.notifications.qcscheduling.tasks.run_scheduling_notices next run updated to 2026-01-29 23:52:30+00:00
+[29/Jan/2026 23:47:27] INFO [django-q:53] qatrack.notifications.qcreview.tasks.run_review_notices next run updated to 2026-01-29 23:52:30+00:00
+[29/Jan/2026 23:47:27] INFO [django-q:53] qatrack.notifications.service_log_review.tasks.run_service_event_review_notices next run updated to 2026-01-29 23:52:30+00:00
+[29/Jan/2026 23:47:27] INFO [django-q:53] qatrack.notifications.service_log_scheduling.tasks.run_scheduling_notices next run updated to 2026-01-29 23:52:30+00:00
+[29/Jan/2026 23:47:27] INFO [django-q:53] qatrack.notifications.faults_review.tasks.run_faults_review_notices next run updated to 2026-01-29 23:52:30+00:00
+[29/Jan/2026 23:47:27] INFO [django-q:65] qatrack.reports.tasks.run_reports schedule created and next run set to 2026-01-29 23:52:30+00:00
+[29/Jan/2026 23:51:20] INFO [django-q:65] qatrack.qa.tasks.clean_autosaves schedule created and next run set to 2026-01-30 04:51:20.161961+00:00
+[29/Jan/2026 23:51:20] INFO [django-q:65] qatrack.notifications.qcscheduling.tasks.run_scheduling_notices schedule created and next run set to 2026-01-29 23:52:30+00:00
+[29/Jan/2026 23:51:20] INFO [django-q:65] qatrack.notifications.qcreview.tasks.run_review_notices schedule created and next run set to 2026-01-29 23:52:30+00:00
+[29/Jan/2026 23:51:20] INFO [django-q:65] qatrack.notifications.service_log_review.tasks.run_service_event_review_notices schedule created and next run set to 2026-01-29 23:52:30+00:00
+[29/Jan/2026 23:51:20] INFO [django-q:65] qatrack.notifications.service_log_scheduling.tasks.run_scheduling_notices schedule created and next run set to 2026-01-29 23:52:30+00:00
+[29/Jan/2026 23:51:20] INFO [django-q:65] qatrack.notifications.faults_review.tasks.run_faults_review_notices schedule created and next run set to 2026-01-29 23:52:30+00:00
+[29/Jan/2026 23:51:28] INFO [django-q:53] qatrack.qa.tasks.clean_autosaves next run updated to 2026-01-30 04:51:28.662628+00:00
+[29/Jan/2026 23:51:28] INFO [django-q:53] qatrack.notifications.qcscheduling.tasks.run_scheduling_notices next run updated to 2026-01-29 23:52:30+00:00
+[29/Jan/2026 23:51:28] INFO [django-q:53] qatrack.notifications.qcreview.tasks.run_review_notices next run updated to 2026-01-29 23:52:30+00:00
+[29/Jan/2026 23:51:28] INFO [django-q:53] qatrack.notifications.service_log_review.tasks.run_service_event_review_notices next run updated to 2026-01-29 23:52:30+00:00
+[29/Jan/2026 23:51:28] INFO [django-q:53] qatrack.notifications.service_log_scheduling.tasks.run_scheduling_notices next run updated to 2026-01-29 23:52:30+00:00
+[29/Jan/2026 23:51:28] INFO [django-q:53] qatrack.notifications.faults_review.tasks.run_faults_review_notices next run updated to 2026-01-29 23:52:30+00:00
+[29/Jan/2026 23:51:28] INFO [django-q:65] qatrack.reports.tasks.run_reports schedule created and next run set to 2026-01-29 23:52:30+00:00
+[30/Jan/2026 00:06:32] INFO [django-q:53] qatrack.qa.tasks.clean_autosaves next run updated to 2026-01-31 04:06:32.095718+00:00
+[30/Jan/2026 00:06:32] INFO [django-q:53] qatrack.notifications.qcscheduling.tasks.run_scheduling_notices next run updated to 2026-01-30 00:07:30+00:00
+[30/Jan/2026 00:06:32] INFO [django-q:53] qatrack.notifications.qcreview.tasks.run_review_notices next run updated to 2026-01-30 00:07:30+00:00
+[30/Jan/2026 00:06:32] INFO [django-q:53] qatrack.notifications.service_log_review.tasks.run_service_event_review_notices next run updated to 2026-01-30 00:07:30+00:00
+[30/Jan/2026 00:06:32] INFO [django-q:53] qatrack.notifications.service_log_scheduling.tasks.run_scheduling_notices next run updated to 2026-01-30 00:07:30+00:00
+[30/Jan/2026 00:06:32] INFO [django-q:53] qatrack.notifications.faults_review.tasks.run_faults_review_notices next run updated to 2026-01-30 00:07:30+00:00
+[30/Jan/2026 00:06:32] INFO [django-q:53] qatrack.reports.tasks.run_reports next run updated to 2026-01-30 00:07:30+00:00
+[30/Jan/2026 00:06:38] INFO [django-q:53] qatrack.qa.tasks.clean_autosaves next run updated to 2026-01-31 04:06:38.769454+00:00
+[30/Jan/2026 00:06:38] INFO [django-q:53] qatrack.notifications.qcscheduling.tasks.run_scheduling_notices next run updated to 2026-01-30 00:07:30+00:00
+[30/Jan/2026 00:06:38] INFO [django-q:53] qatrack.notifications.qcreview.tasks.run_review_notices next run updated to 2026-01-30 00:07:30+00:00
+[30/Jan/2026 00:06:38] INFO [django-q:53] qatrack.notifications.service_log_review.tasks.run_service_event_review_notices next run updated to 2026-01-30 00:07:30+00:00
+[30/Jan/2026 00:06:38] INFO [django-q:53] qatrack.notifications.service_log_scheduling.tasks.run_scheduling_notices next run updated to 2026-01-30 00:07:30+00:00
+[30/Jan/2026 00:06:38] INFO [django-q:53] qatrack.notifications.faults_review.tasks.run_faults_review_notices next run updated to 2026-01-30 00:07:30+00:00
+[30/Jan/2026 00:06:38] INFO [django-q:53] qatrack.reports.tasks.run_reports next run updated to 2026-01-30 00:07:30+00:00
+[30/Jan/2026 00:11:24] INFO [django-q:53] qatrack.qa.tasks.clean_autosaves next run updated to 2026-01-31 04:11:24.611948+00:00
+[30/Jan/2026 00:11:24] INFO [django-q:53] qatrack.notifications.qcscheduling.tasks.run_scheduling_notices next run updated to 2026-01-30 00:22:30+00:00
+[30/Jan/2026 00:11:24] INFO [django-q:53] qatrack.notifications.qcreview.tasks.run_review_notices next run updated to 2026-01-30 00:22:30+00:00
+[30/Jan/2026 00:11:24] INFO [django-q:53] qatrack.notifications.service_log_review.tasks.run_service_event_review_notices next run updated to 2026-01-30 00:22:30+00:00
+[30/Jan/2026 00:11:24] INFO [django-q:53] qatrack.notifications.service_log_scheduling.tasks.run_scheduling_notices next run updated to 2026-01-30 00:22:30+00:00
+[30/Jan/2026 00:11:24] INFO [django-q:53] qatrack.notifications.faults_review.tasks.run_faults_review_notices next run updated to 2026-01-30 00:22:30+00:00
+[30/Jan/2026 00:11:24] INFO [django-q:53] qatrack.reports.tasks.run_reports next run updated to 2026-01-30 00:22:30+00:00
+[30/Jan/2026 00:11:30] INFO [django-q:53] qatrack.qa.tasks.clean_autosaves next run updated to 2026-01-31 04:11:30.622959+00:00
+[30/Jan/2026 00:11:30] INFO [django-q:53] qatrack.notifications.qcscheduling.tasks.run_scheduling_notices next run updated to 2026-01-30 00:22:30+00:00
+[30/Jan/2026 00:11:30] INFO [django-q:53] qatrack.notifications.qcreview.tasks.run_review_notices next run updated to 2026-01-30 00:22:30+00:00
+[30/Jan/2026 00:11:30] INFO [django-q:53] qatrack.notifications.service_log_review.tasks.run_service_event_review_notices next run updated to 2026-01-30 00:22:30+00:00
+[30/Jan/2026 00:11:30] INFO [django-q:53] qatrack.notifications.service_log_scheduling.tasks.run_scheduling_notices next run updated to 2026-01-30 00:22:30+00:00
+[30/Jan/2026 00:11:30] INFO [django-q:53] qatrack.notifications.faults_review.tasks.run_faults_review_notices next run updated to 2026-01-30 00:22:30+00:00
+[30/Jan/2026 00:11:30] INFO [django-q:53] qatrack.reports.tasks.run_reports next run updated to 2026-01-30 00:22:30+00:00

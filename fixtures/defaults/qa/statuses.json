@@ -1,0 +1,41 @@
+[
+{
+    "model": "qa.testinstancestatus",
+    "fields": {
+        "name": "Unreviewed",
+        "slug": "unreviewed",
+        "description": null,
+        "is_default": true,
+        "requires_review": true,
+        "export_by_default": true,
+        "valid": true,
+        "colour": "rgba(243,156,18,1)"
+    }
+},
+{
+    "model": "qa.testinstancestatus",
+    "fields": {
+        "name": "Approved",
+        "slug": "Approved",
+        "description": null,
+        "is_default": false,
+        "requires_review": false,
+        "export_by_default": true,
+        "valid": true,
+        "colour": "rgba(243,156,18,1)"
+    }
+},
+{
+    "model": "qa.testinstancestatus",
+    "fields": {
+        "name": "Rejected",
+        "slug": "rejected",
+        "description": null,
+        "is_default": false,
+        "requires_review": false,
+        "export_by_default": false,
+        "valid": false,
+        "colour": "rgba(243,156,18,1)"
+    }
+}
+]

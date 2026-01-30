@@ -1,0 +1,28 @@
+[
+{
+    "model": "qa.category",
+    "fields": {
+        "name": "Dosimetry",
+        "slug": "dosimetry",
+        "description": "Dosimetry",
+        "parent": null,
+        "lft": 1,
+        "rght": 2,
+        "tree_id": 1,
+        "level": 0
+    }
+},
+{
+    "model": "qa.category",
+    "fields": {
+        "name": "Mechanical and safety",
+        "slug": "mechanical-and-safety",
+        "description": "Mechanical & Safety",
+        "parent": null,
+        "lft": 1,
+        "rght": 2,
+        "tree_id": 2,
+        "level": 0
+    }
+}
+]

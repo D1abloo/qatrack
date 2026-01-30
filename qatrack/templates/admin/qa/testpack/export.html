@@ -1,0 +1,215 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_urls static admin_list widget_tweaks %}
+
+{% block extrastyle %}
+  {{ block.super }}
+
+  <link href="{% static "fontawsome/css/font-awesome.min.css" %}" rel="stylesheet">
+  <link href="{% static "css/bootstrap-grid.css" %}" rel="stylesheet">
+  <link href="{% static "datatables/1.10/css/datatables.min.css" %}" rel="stylesheet">
+  <link href="{% static "datatables/1.10/DataTables-1.10.18/css/jquery.dataTables.min.css" %}" rel="stylesheet">
+{% endblock %}
+
+
+
+{% block breadcrumbs %}
+  <div class="breadcrumbs">
+    <a href="{% url 'admin:index' %}">{% trans 'Home' %}</a> &rsaquo;
+    <a href="{% url 'admin:app_list' app_label='qa' %}">{% trans "QC" %}</a> &rsaquo;
+    {% trans "Export Test Pack" %}
+  </div>
+{% endblock %}
+
+{% block coltype %}flex{% endblock %}
+
+
+{% block content %}
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-12">
+      <p>
+        {% blocktrans %}
+        On this page you may create a Test Pack for sharing test lists,
+        tests, and other QATrack+ configuration data with other QATrack+
+        installations.
+        {% endblocktrans %}
+      </p>
+    </div>
+  </div>
+
+  <div class="row">
+
+    <div class="col-sm-8">
+      <div class="row">
+        <div class="col-sm-12 tp-container">
+          <hr/>
+          <h2>{% trans "Test Lists To Export" %}</h2>
+
+          <em class="loading">{% trans "Loading Test List table" %}...</em>
+          <table id="testlists-table" style="display: none">
+            <thead>
+              <tr>
+                <th>{% trans "ID" %}</th>
+                <th>{% trans "Test List" %}</th>
+                <th>{% trans "Description" %}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for list in testlists %}
+                <tr>
+                  <td>{{ list.id }}</td>
+                  <td>{{ list.name }}</td>
+                  <td>{{ list.description }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+
+          </table>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-12 tp-container">
+          <hr/>
+          <h2>{% trans "Test List Cycles To Export" %}</h2>
+
+          <em class="loading">{% trans "Loading Test List Cycle table" %}...</em>
+          <table id="testlistcycles-table" style="display: none">
+            <thead>
+              <tr>
+                <th>{% trans "ID" %}</th>
+                <th>{% trans "Cycle" %}</th>
+                <th>{% trans "Description" %}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for cycle in cycles %}
+                <tr>
+                  <td>{{ cycle.id }}</td>
+                  <td>{{ cycle.name }}</td>
+                  <td>{{ cycle.description }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+
+          </table>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-12 tp-container">
+          <hr/>
+          <h2>{% trans "Select Extra Tests To Export" %}</h2>
+
+          <p>
+            <em>
+              {% blocktrans %}
+              Note that there is no need to select tests that are already
+              included as part of a test list
+              {% endblocktrans %}
+            </em>
+          </p>
+
+          <em class="loading">{% trans "Loading Test table" %}...</em>
+          <table id="tests-table" style="display: none">
+            <thead>
+              <tr>
+                <th>{% trans "ID" %}</th>
+                <th>{% trans "Test" %}</th>
+                <th>{% trans "Category" %}</th>
+                <th>{% trans "Type" %}</th>
+                <th>{% trans "Description" %}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for test in tests %}
+                <tr>
+                  <td>{{ test.id }}</td>
+                  <td>{{ test }}</td>
+                  <td>{{ test.category.name }}</td>
+                  <td>{{ test.get_type_display }}</td>
+                  <td>{{ test.description }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-4">
+      <h2>{% trans "Summary" %}</h2>
+      <hr/>
+      <div id="summary">
+
+        <div class="row">
+          <div class="col-sm-6">{% trans "Test Lists" %}:</div>
+          <div class="col-sm-6" style="text-align: right" id="testlists-summary">{% trans "0 Selected" %}</div>
+        </div>
+
+        <div class="row">
+          <div class="col-sm-6">{% trans "Test Lists Cycles" %}:</div>
+          <div class="col-sm-6" style="text-align: right" id="testlistcycles-summary">{% trans "0 Selected" %}</div>
+        </div>
+
+        <div class="row">
+          <div class="col-sm-6">{% trans "Tests" %}:</div>
+          <div class="col-sm-6" style="text-align: right" id="tests-summary">{% trans "0 Selected" %}</div>
+        </div>
+
+      </div>
+      <hr/>
+      <form method="post" action class="form-horizontal">
+        {% csrf_token %}
+        <div>
+          {{ form.testlists }}
+          {{ form.testlistcycles }}
+          {{ form.tests }}
+        </div>
+        <div class="row">
+          <div class="col-sm-6">
+            {% trans "Test Pack Name" %}:
+          </div>
+          <div class="col-sm-6" style="text-align: right">
+            {{ form.name|attr:"style:width: 100%" }}
+            {{ form.name.errors }}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-6">
+            {% trans "Description" %}:
+          </div>
+          <div class="col-sm-6" style="">
+            {{ form.description|attr:"style:width: 100%" }}
+            {{ form.description.errors }}
+          </div>
+        </div>
+        {% if form.non_field_errors %}
+          <ul class="errorlist nonfield">
+            {% for error in form.non_field_errors %}
+              <li>{{ error }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+        <div class="submit-row">
+          <input type="submit" value="{% trans "Download" %}" class="default">
+        </div>
+      </form>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}
+
+{% block footer %}
+
+<script src="{% static "jquery/js/jquery.min.js" %}"></script>
+
+<script src="{% static "datatables/1.10/js/datatables.min.js" %}"></script>
+<script src="{% static "js/testpack-export.js" %}"></script>
+
+{% endblock %}
+

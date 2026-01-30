@@ -1,0 +1,6 @@
+[26/Dec/2025 08:58:55] INFO [auth.QATrackAccountBackend:24] Attempting to authenticate admin
+[26/Dec/2025 08:58:55] INFO [auth.QATrackAccountBackend:26] Cleaned username: admin
+[26/Dec/2025 08:58:55] INFO [auth.QATrackAccountBackend:30] Successfully authenticated user: admin
+[29/Dec/2025 18:02:36] INFO [auth.QATrackAccountBackend:24] Attempting to authenticate admin
+[29/Dec/2025 18:02:36] INFO [auth.QATrackAccountBackend:26] Cleaned username: admin
+[29/Dec/2025 18:02:36] INFO [auth.QATrackAccountBackend:30] Successfully authenticated user: admin
