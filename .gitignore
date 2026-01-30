@@ -20,6 +20,8 @@ backups/
 # Docker user data / caches (generated)
 deploy/docker/user-data/
 
+# Python cache
+qatrack/__pycache__/
+
 # Pip cache
 pip-cache/
-
