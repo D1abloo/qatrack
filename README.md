@@ -51,6 +51,7 @@ Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
 
 4. **Restaurar backup de volumen**
    - Restaura un `.tar.gz` dentro del volumen `qatrack-postgres-volume`.
+   - Muestra lista numerada con fecha y hora para elegir rapidamente.
    - Ofrece arrancar los contenedores al finalizar.
 
 5. **Descargar/actualizar repo**
