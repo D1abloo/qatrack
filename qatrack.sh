@@ -184,6 +184,10 @@ download_repo() {
     echo "Ruta destino requerida." >&2
     exit 1
   fi
+  if [[ -d "$dest_dir" && -n "$(ls -A "$dest_dir" 2>/dev/null)" ]]; then
+    dest_dir="$dest_dir/qatrackplus"
+    echo "La ruta no esta vacia. Se usara: $dest_dir"
+  fi
   if [[ -d "$dest_dir/.git" ]]; then
     echo "La carpeta ya contiene un repo. Elimina la carpeta o elige otra ruta." >&2
     exit 1

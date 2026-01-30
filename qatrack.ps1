@@ -108,6 +108,13 @@ function Download-Repo {
   if (Test-Path $down) { Write-Host $down }
   $destDir = Read-Host "Ruta destino para descargar el repo [$defaultDir]"
   if (-not $destDir) { $destDir = $defaultDir }
+  if (Test-Path $destDir) {
+    $items = Get-ChildItem -Force -Path $destDir -ErrorAction SilentlyContinue
+    if ($items) {
+      $destDir = Join-Path $destDir 'qatrackplus'
+      Write-Host "La ruta no esta vacia. Se usara: $destDir"
+    }
+  }
 
   if (Test-Path (Join-Path $destDir '.git')) {
     Write-Error 'La carpeta ya contiene un repo. Elimina la carpeta o elige otra ruta.'
