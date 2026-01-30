@@ -92,8 +92,23 @@ function Backup-Volume {
   if ($LASTEXITCODE -ne 0) {
     Write-Error "No existe el volumen: $volumeName"
   }
+  $cid = & docker compose -f $ComposeFile ps -aq qatrack-postgres 2>$null
+  $wasRunning = $false
+  if ($cid) {
+    $state = & docker inspect -f "{{.State.Running}}" $cid 2>$null
+    if ($state -eq 'true') { $wasRunning = $true }
+  }
+  if ($wasRunning) {
+    $stopNow = Read-Host 'Para backup consistente, detener qatrack-postgres? [s/N]'
+    if ($stopNow -eq 's' -or $stopNow -eq 'S') {
+      & docker compose -f $ComposeFile stop qatrack-postgres | Out-Null
+    }
+  }
   & docker run --rm -v "${volumeName}:/data:ro" -v "${BackupDir}:/backup" alpine:3.19 sh -c "cd /data && tar -czf /backup/$(Split-Path -Leaf $archive) ."
   Write-Host "Backup creado: $archive"
+  if ($wasRunning) {
+    & docker compose -f $ComposeFile up -d qatrack-postgres | Out-Null
+  }
 }
 
 function Restore-Volume {

@@ -134,6 +134,7 @@ stop_containers() {
 backup_volume() {
   mkdir -p "$BACKUP_DIR"
   local ts archive volume_name
+  local cid was_running
   ts="$(date +%Y%m%d_%H%M%S)"
   volume_name="$(resolve_volume_name)"
   archive="$BACKUP_DIR/${volume_name}_${ts}.tar.gz"
@@ -146,12 +147,38 @@ backup_volume() {
     volume_name="$(resolve_volume_name)"
   fi
   if docker volume inspect "$volume_name" >/dev/null 2>&1; then
+    if docker compose version >/dev/null 2>&1; then
+      cid="$(docker compose -f "$COMPOSE_FILE" ps -aq qatrack-postgres 2>/dev/null || true)"
+    else
+      cid="$(docker-compose -f "$COMPOSE_FILE" ps -q qatrack-postgres 2>/dev/null || true)"
+    fi
+    was_running=""
+    if [[ -n "${cid:-}" ]]; then
+      was_running="$(docker inspect -f '{{.State.Running}}' "$cid" 2>/dev/null || true)"
+    fi
+    if [[ "$was_running" == "true" ]]; then
+      read -r -p "Para backup consistente, detener qatrack-postgres? [s/N]: " stop_now
+      if [[ "$stop_now" == "s" || "$stop_now" == "S" ]]; then
+        if docker compose version >/dev/null 2>&1; then
+          docker compose -f "$COMPOSE_FILE" stop qatrack-postgres
+        else
+          docker-compose -f "$COMPOSE_FILE" stop qatrack-postgres
+        fi
+      fi
+    fi
     docker run --rm \
       -v "$volume_name":/data:ro \
       -v "$BACKUP_DIR":/backup \
       alpine:3.19 \
       sh -c "cd /data && tar -czf /backup/$(basename "$archive") ."
     echo "Backup creado: $archive"
+    if [[ "$was_running" == "true" ]]; then
+      if docker compose version >/dev/null 2>&1; then
+        docker compose -f "$COMPOSE_FILE" up -d qatrack-postgres
+      else
+        docker-compose -f "$COMPOSE_FILE" up -d qatrack-postgres
+      fi
+    fi
   else
     echo "No existe el volumen: $volume_name" >&2
     exit 1

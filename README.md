@@ -46,6 +46,7 @@ Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
 3. **Crear backup de volumen**
    - Crea un `.tar.gz` con el contenido del volumen `qatrack-postgres-volume`.
    - Guarda los backups en `backups/`.
+   - Para evitar perdida de datos, el script ofrece detener `qatrack-postgres` antes del backup.
 
 4. **Restaurar backup de volumen**
    - Restaura un `.tar.gz` dentro del volumen `qatrack-postgres-volume`.
