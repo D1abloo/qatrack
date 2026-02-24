@@ -8,10 +8,20 @@ REPO_URL_DEFAULT="https://github.com/D1abloo/qatrack.git"
 CONFIG_BACKUP_DIR_FILE="$REPO_ROOT/.qatrack_backup_dir"
 
 LOCAL_SETTINGS="$REPO_ROOT/qatrack/local_settings.py"
+NGINX_CONF="$REPO_ROOT/deploy/docker/nginx.conf"
+UPLOAD_MAX_BYTES=209715200
+UPLOAD_MAX_NGINX=200M
 
 ensure_local_settings() {
   if [[ ! -f "$LOCAL_SETTINGS" ]]; then
     echo "No se encontro $LOCAL_SETTINGS" >&2
+    exit 1
+  fi
+}
+
+ensure_nginx_conf() {
+  if [[ ! -f "$NGINX_CONF" ]]; then
+    echo "No se encontro $NGINX_CONF" >&2
     exit 1
   fi
 }
@@ -78,6 +88,60 @@ clean_hosts = list(dict.fromkeys(clean_hosts))
 new_list = "[" + ", ".join(repr(h) for h in clean_hosts) + "]"
 text = text[: m.start(1)] + new_list + text[m.end(1) :]
 path.write_text(text)
+PY
+}
+
+update_upload_limits() {
+  ensure_local_settings
+  ensure_nginx_conf
+  export LOCAL_SETTINGS NGINX_CONF UPLOAD_MAX_BYTES UPLOAD_MAX_NGINX
+
+  python3 - <<'PY'
+import os
+import re
+from pathlib import Path
+
+local_settings = Path(os.environ["LOCAL_SETTINGS"])
+nginx_conf = Path(os.environ["NGINX_CONF"])
+upload_max_bytes = int(os.environ["UPLOAD_MAX_BYTES"])
+upload_max_nginx = os.environ["UPLOAD_MAX_NGINX"]
+
+# Update/append Django upload limits.
+ls_text = local_settings.read_text()
+for key in ("DATA_UPLOAD_MAX_MEMORY_SIZE", "FILE_UPLOAD_MAX_MEMORY_SIZE"):
+    pattern = rf"(?m)^{key}\s*=\s*\d+\s*$"
+    replacement = f"{key} = {upload_max_bytes}"
+    if re.search(pattern, ls_text):
+        ls_text = re.sub(pattern, replacement, ls_text)
+    else:
+        if not ls_text.endswith("\n"):
+            ls_text += "\n"
+        ls_text += f"{replacement}\n"
+local_settings.write_text(ls_text)
+
+# Update/append Nginx client_max_body_size in http block.
+ng_text = nginx_conf.read_text()
+directive_pattern = r"(?m)^\s*client_max_body_size\s+\S+;\s*$"
+if re.search(directive_pattern, ng_text):
+    ng_text = re.sub(directive_pattern, f"    client_max_body_size {upload_max_nginx};", ng_text, count=1)
+else:
+    include_pattern = r"(?m)^(\s*include\s+/etc/nginx/mime\.types;\s*)$"
+    if re.search(include_pattern, ng_text):
+        ng_text = re.sub(
+            include_pattern,
+            r"\1\n    # Increase upload size to allow large .tpk imports.\n"
+            f"    client_max_body_size {upload_max_nginx};",
+            ng_text,
+            count=1,
+        )
+    else:
+        ng_text = ng_text.replace(
+            "http {",
+            "http {\n    # Increase upload size to allow large .tpk imports.\n"
+            f"    client_max_body_size {upload_max_nginx};",
+            1,
+        )
+nginx_conf.write_text(ng_text)
 PY
 }
 
@@ -416,8 +480,10 @@ while true; do
   case "$choice" in
     1)
       update_allowed_hosts
+      update_upload_limits
       start_containers
       echo "IP agregada a ALLOWED_HOSTS: $ip"
+      echo "Limites de carga aplicados: Nginx=$UPLOAD_MAX_NGINX Django=${UPLOAD_MAX_BYTES} bytes"
       pause_menu
       ;;
     2)
