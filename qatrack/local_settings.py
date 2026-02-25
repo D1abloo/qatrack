@@ -15,6 +15,6 @@ ALLOWED_HOSTS = ['192.168.1.13', '127.0.0.1']
 
 TIME_ZONE = 'UTC'
 
-# Allow larger uploads (e.g. .tpk imports)
+# Subidas de archivos
 DATA_UPLOAD_MAX_MEMORY_SIZE = 209715200
 FILE_UPLOAD_MAX_MEMORY_SIZE = 209715200
